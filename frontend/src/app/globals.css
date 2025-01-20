@@ -1,21 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+    /* --background: rgb(255, 235, 222); */
+    --foreground: #1e1e1e;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+    color: var(--foreground);
+    background: url('/images/home/background-home-plain.png') repeat;
+    background-size: cover; /* Ensure the image fits its container */
+    background-attachment: scroll; /* Allows the image to move with the scroll */
+    font-family: 'Inter', serif;
+    margin: 0;
+    padding: 0;
 }
+
+body {
+    color: var(--foreground);
+    background: url('/images/home/background-home-plain.png') no-repeat center
+        center fixed;
+    background-size: cover; /* Ensure the image fits the full width */
+    font-family: 'Inter', serif;
+    margin: 0;
+    padding: 0;
+}
+
+.slide-out-left {
+    -webkit-animation: slide-out-left 1s cubic-bezier(0.55, 0.085, 0.68, 0.53)
+        both;
+    animation: slide-out-left 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+}
+@-webkit-keyframes slide-out-left {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: translateX(-1000px);
+        transform: translateX(-1000px);
+        opacity: 0;
+    }
+}
+@keyframes slide-out-left {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: translateX(-1000px);
+        transform: translateX(-1000px);
+        opacity: 0;
+    }
+}
+
+.slide-in-left {
+    -webkit-animation: slide-in-left 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+        both;
+    animation: slide-in-left 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@-webkit-keyframes slide-in-left {
+    0% {
+        -webkit-transform: translateX(-1000px);
+        transform: translateX(-1000px);
+        opacity: 0;
+    }
+    100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes slide-in-left {
+    0% {
+        -webkit-transform: translateX(-1000px);
+        transform: translateX(-1000px);
+        opacity: 0;
+    }
+    100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+.text-brown-gradient {
+    background: linear-gradient(
+        163deg,
+        rgba(123, 58, 18, 1) 0%,
+        rgba(225, 106, 33, 1) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    position: relative;
+}
+
+.text-brown-gradient::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px; /* Thickness of the underline */
+    background: linear-gradient(
+        163deg,
+        rgba(123, 58, 18, 1) 0%,
+        rgba(225, 106, 33, 1) 100%
+    );
+    transform: translateY(
+        1px
+    ); /* Position the underline slightly below the text */
+}
+
+.header {
+    background: inherit; /* Matches body background */
+    /* backdrop-filter: blur(10px); */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent fallback */
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  */
+    z-index: 50; /* Ensures it's always above other content */
+    position: sticky;
+    top: 0;
+    width: 100%;
+}
+
+/* .glass-background {
+    filter: drop-shadow(0px 39.874px 39.874px #222629);
+    backdrop-filter: blur(22px);
+} */
