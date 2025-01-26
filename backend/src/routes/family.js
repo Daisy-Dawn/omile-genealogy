@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Person = require('../models/Person')
-const { validateFamilyMember } = require('../middlewares/personValidation')
+const { validateFamilyMember } = require('../middlewares/validations')
 const mongoose = require('mongoose')
 // const cacheMiddleware = require('../middlewares/cache')
 

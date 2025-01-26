@@ -1,7 +1,7 @@
 import React from 'react'
 
 const FamilyTree = () => {
-    return <div>Family Tree Page</div>
+    return <section>Family Tree Page</section>
 }
 
 export default FamilyTree

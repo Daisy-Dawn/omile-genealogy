@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const connectDB = require('./src/config/db')
 const cors = require('cors')
 const familyRoutes = require('./src/routes/family')
+const photoRoutes = require('./src/routes/photos')
 require('./src/utils/debug')
 
 dotenv.config()
@@ -35,6 +36,7 @@ app.use(
 
 // Routes
 app.use('/api/family', familyRoutes)
+app.use('/api/photos', photoRoutes)
 app.get('/', (req, res) => {
     res.send('Backend is running!')
 })

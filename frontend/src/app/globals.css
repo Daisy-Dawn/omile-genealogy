@@ -26,12 +26,42 @@ body {
 
 body {
     color: var(--foreground);
-    background: url('/images/home/background-home-plain.png') no-repeat center
-        center fixed;
+    background: url('/images/home/background-home.png') no-repeat center center
+        fixed;
     background-size: cover; /* Ensure the image fits the full width */
     font-family: 'Inter', serif;
     margin: 0;
     padding: 0;
+    position: relative; /* Necessary for positioning pseudo-elements */
+}
+
+/* Add side images using pseudo-elements */
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    width: 20%; /* Adjust width as needed for the side images */
+    height: 100%; /* Stretch to full height */
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 7; /* Ensure it's below the main content */
+}
+
+body::before {
+    left: 0; /* Attach to the left side */
+    background-image: url('/images/home/palm-left.png'); /* Replace with your left-side image path */
+}
+
+body::after {
+    right: 0; /* Attach to the right side */
+    background-image: url('/images/home/palm-right.png'); /* Replace with your right-side image path */
+}
+
+/* Ensure main content is above the side images */
+section {
+    position: relative;
+    z-index: 3;
 }
 
 .slide-out-left {
@@ -94,6 +124,18 @@ body {
         opacity: 1;
     }
 }
+
+.header {
+    background: inherit; /* Matches body background */
+    /* backdrop-filter: blur(10px); */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent fallback */
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  */
+    z-index: 5;
+    position: sticky;
+    top: 0;
+    width: 100%;
+}
+
 .text-brown-gradient {
     background: linear-gradient(
         163deg,
@@ -124,18 +166,53 @@ body {
     ); /* Position the underline slightly below the text */
 }
 
-.header {
-    background: inherit; /* Matches body background */
-    /* backdrop-filter: blur(10px); */
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent fallback */
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  */
-    z-index: 50; /* Ensures it's always above other content */
-    position: sticky;
-    top: 0;
-    width: 100%;
+.text-brown-gradient-main {
+    background: rgb(131, 65, 15);
+    background: linear-gradient(
+        163deg,
+        rgba(131, 65, 15, 1) 0%,
+        rgba(219, 104, 32, 1) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    position: relative;
 }
 
-/* .glass-background {
-    filter: drop-shadow(0px 39.874px 39.874px #222629);
-    backdrop-filter: blur(22px);
-} */
+.button-home {
+    background: rgb(123, 58, 18);
+    background: linear-gradient(
+        163deg,
+        rgba(123, 58, 18, 1) 0%,
+        rgba(225, 106, 33, 1) 100%
+    );
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.mySwiper {
+    padding: 1rem 0;
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+}
+
+@media (max-width: 768px) {
+    body {
+        background: url('/images/home/background-home-plain.png') no-repeat
+            center center fixed;
+    }
+    body::before,
+    body::after {
+        display: none;
+    }
+}

@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { RiCloseLargeLine } from 'react-icons/ri'
 import { usePathname } from 'next/navigation'
 import '../../app/globals.css'
+import Image from 'next/image'
 
 const Header = () => {
     const pathname = usePathname() // Get the current path dynamically
@@ -53,22 +54,14 @@ const Header = () => {
                 onClick={handleToggle}
             >
                 {toggle ? (
-                    <RiCloseLargeLine />
+                    <RiCloseLargeLine size={27} className="text-appBrown" />
                 ) : (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-6"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                        />
-                    </svg>
+                    <Image
+                        width={32}
+                        height={32}
+                        src="/images/home/Menu.svg"
+                        alt="main tree "
+                    />
                 )}
             </span>
             {/*  */}
