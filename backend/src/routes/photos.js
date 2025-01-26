@@ -6,8 +6,8 @@ const router = express.Router()
 // CREATE: Add a new photo
 router.post('/', validatePhoto, async (req, res) => {
     try {
-        const { photourl, name } = req.body
-        const photo = new Photo({ photourl, name })
+        const { photourl, name, type } = req.body
+        const photo = new Photo({ photourl, name, type })
         await photo.save()
         res.status(201).json({ message: 'Photo created successfully', photo })
     } catch (err) {
@@ -15,18 +15,21 @@ router.post('/', validatePhoto, async (req, res) => {
     }
 })
 
-// READ: Get all photos or filter by name
+// READ: Get all photos or filter by name and/or type
 router.get('/', async (req, res) => {
     try {
-        const { name } = req.query
+        const { name, type } = req.query
 
         // Build the filter query
         const filter = {}
         if (name) {
             filter.name = { $regex: name, $options: 'i' } // Case-insensitive search
         }
+        if (type) {
+            filter.type = type // Exact match for type
+        }
 
-        const photos = await Photo.find(filter) // Apply the filter
+        const photos = await Photo.find(filter)
         res.status(200).json(photos)
     } catch (err) {
         res.status(500).json({ error: err.message })
@@ -47,11 +50,11 @@ router.get('/:id', async (req, res) => {
 // UPDATE: Partially update a photo by ID
 router.patch('/:id', async (req, res) => {
     try {
-        const updates = req.body // Accept only the fields provided in the request
+        const updates = req.body
         const photo = await Photo.findByIdAndUpdate(
             req.params.id,
-            { $set: updates }, // Use $set to update only specified fields
-            { new: true, runValidators: true } // Return the updated document
+            { $set: updates },
+            { new: true, runValidators: true }
         )
         if (!photo) return res.status(404).json({ message: 'Photo not found' })
         res.status(200).json({ message: 'Photo updated successfully', photo })

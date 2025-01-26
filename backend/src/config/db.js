@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Person = require('../models/Person')
+const Photo = require('../models/Photo')
 
 const connectDB = async () => {
     try {

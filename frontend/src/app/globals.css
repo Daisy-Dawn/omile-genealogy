@@ -24,16 +24,15 @@ body {
     padding: 0;
 }
 
-body {
+/* body {
     color: var(--foreground);
     background: url('/images/home/background-home.png') no-repeat center center
         fixed;
-    background-size: cover; /* Ensure the image fits the full width */
-    font-family: 'Inter', serif;
+    background-size: cover; 
     margin: 0;
     padding: 0;
-    position: relative; /* Necessary for positioning pseudo-elements */
-}
+    position: relative; 
+} */
 
 /* Add side images using pseudo-elements */
 body::before,
@@ -42,7 +41,7 @@ body::after {
     position: fixed;
     top: 0;
     width: 20%; /* Adjust width as needed for the side images */
-    height: 100%; /* Stretch to full height */
+    height: 41%; /* Stretch to full height */
     background-size: contain;
     background-repeat: no-repeat;
     z-index: 7; /* Ensure it's below the main content */
@@ -192,11 +191,12 @@ section {
 .carousel-wrapper {
     position: relative;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .mySwiper {
     padding: 1rem 0;
+    /* z-index: 10; */
 }
 
 .swiper-slide {

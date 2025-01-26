@@ -28,6 +28,11 @@ const validatePhoto = [
         .isURL()
         .withMessage('Photo URL must be a valid URL'),
     check('name').notEmpty().withMessage('Name is required'),
+    check('type')
+        .notEmpty()
+        .withMessage('Type is required')
+        .isIn(['historical', 'recentEvents'])
+        .withMessage('Type must be either "historical" or "recentEvents"'),
     (req, res, next) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
