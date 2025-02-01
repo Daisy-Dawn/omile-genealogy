@@ -206,6 +206,30 @@ section {
     width: auto;
 }
 
+.family-tree-connector {
+    position: relative;
+}
+
+.family-tree-connector::before {
+    content: '';
+    position: absolute;
+    top: -20px; /* Adjust based on spacing */
+    left: 15px; /* Align with the sidebar */
+    width: 2px;
+    height: 20px;
+    background-color: #8d4315;
+}
+
+.family-tree-connector::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    width: 30px;
+    height: 2px;
+    background-color: #8d4315;
+}
+
 @media (max-width: 768px) {
     body {
         background: url('/images/home/background-home-plain.png') no-repeat

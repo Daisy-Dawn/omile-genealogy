@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Home() {
     return (
@@ -16,9 +17,11 @@ export default function Home() {
                         spanning across decades of Nigerian family history
                     </p>
 
-                    <button className="md:rounded-[16px] rounded-[6px] button-home mt-[1rem] text-white md:text-[15px] text-[13px] md:px-8 px-4 md:py-4 py-2 flex justify-center items-center">
-                        Explore our family tree
-                    </button>
+                    <Link href="/family-tree">
+                        <button className="md:rounded-[16px] rounded-[6px] button-home mt-[1rem] text-white md:text-[15px] text-[13px] md:px-8 px-4 md:py-4 py-2 flex justify-center items-center">
+                            Explore our family tree
+                        </button>
+                    </Link>
                 </div>
             </div>
 

@@ -73,15 +73,12 @@ router.get('/', async (req, res) => {
     // Loop over query parameters and apply as filters, handling dot notation for nested fields
     Object.keys(req.query).forEach((key) => {
         if (key !== 'page' && key !== 'limit') {
-            // Handle dot notation for nested fields
-            const fieldParts = key.split('.')
+            let value = req.query[key].trim()
 
-            if (fieldParts.length > 1) {
-                // If the query param is for nested fields like 'descendant.children.name'
-                filters[key] = new RegExp(req.query[key], 'i') // Case-insensitive regex
-            } else {
-                filters[key] = new RegExp(req.query[key], 'i') // Regular expression for direct fields
-            }
+            // Escape special characters in regex
+            value = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+            filters[key] = { $regex: value, $options: 'i' } // Case-insensitive search
         }
     })
 
@@ -93,8 +90,8 @@ router.get('/', async (req, res) => {
             .skip((sanitizedPage - 1) * sanitizedLimit)
             .limit(Number(sanitizedLimit))
             .populate('descendants.children')
-            .populate('descendants.grandchildren')
-            .populate('descendants.greatgrandchildren')
+        // .populate('descendants.grandchildren')
+        // .populate('descendants.greatgrandchildren')
 
         const totalRecords = await Person.countDocuments()
 
@@ -144,6 +141,24 @@ router.get('/:id', async (req, res) => {
             message: 'Family member found',
             data: familyMember,
         })
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+})
+
+// Get a single family member by name
+router.get('/:name', async (req, res) => {
+    try {
+        const person = await Person.findOne({ name: req.params.name })
+            .populate('descendants.children', '_id name') // Only return _id and name for children
+            .populate('descendants.grandchildren', '_id name')
+            .populate('descendants.greatgrandchildren', '_id name')
+
+        if (!person) {
+            return res.status(404).json({ message: 'Person not found' })
+        }
+
+        res.json(person)
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
