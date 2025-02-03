@@ -23,6 +23,10 @@ body {
     margin: 0;
     padding: 0;
 }
+.app-bg {
+    background: url('/images/home/background-home-plain.png') repeat;
+    background-size: cover; /* Ensure the image fits its container */
+}
 
 /* body {
     color: var(--foreground);
