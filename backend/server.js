@@ -19,7 +19,7 @@ app.use(
     cors({
         origin: function (origin, callback) {
             const allowedOrigins = [
-                // 'https://bulletin-board-iota.vercel.app', // Production origin
+                'https://omile-genealogy.vercel.app', // Production origin
                 'http://localhost:3000', // Development origin
             ]
 
