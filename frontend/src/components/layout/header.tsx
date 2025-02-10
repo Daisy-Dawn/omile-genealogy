@@ -21,6 +21,7 @@ const Header = () => {
     const navLinks = [
         { title: 'Home', link: '/' },
         { title: 'About', link: '/about' },
+        { title: 'Chronology', link: '/chronology' },
         { title: 'Family Tree', link: '/family-tree' },
         { title: 'Photos', link: '/photos' },
     ]

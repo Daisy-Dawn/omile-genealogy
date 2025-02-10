@@ -18,6 +18,8 @@ router.post('/', validateFamilyMember, async (req, res) => {
         const children =
             descendants?.children?.map((child) => ({
                 name: child,
+                bio: child.bio || '', // Default bio for grandchildren
+                picture: child.picture || '', // Default picture for grandchildren
                 _id: new mongoose.Types.ObjectId(),
             })) || []
 
@@ -203,6 +205,8 @@ router.put('/:id', validateFamilyMember, async (req, res) => {
                 updateData.descendants.children =
                     updateData.descendants.children.map((child) => ({
                         name: child,
+                        bio: child.bio || '',
+                        picture: child.picture || '',
                         _id: child._id || new mongoose.Types.ObjectId(), // Retain or generate unique _id
                     }))
             }

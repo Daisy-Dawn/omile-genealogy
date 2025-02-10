@@ -4,6 +4,7 @@ import { PiUsersFour } from 'react-icons/pi'
 import { IoIosArrowForward } from 'react-icons/io'
 import { IoIosArrowDown } from 'react-icons/io'
 import Image from 'next/image'
+import { Avatar, CircularProgress } from '@mui/material'
 
 export const FamilyTreeParent = ({ name }: { name: string }) => {
     const [collapseBar, setCollapseBar] = useState(false)
@@ -68,7 +69,10 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
                     />
                 </>
             )}
-            <div className="rounded-[16px] relative font-medium flex shadow-xl min-h-[70px]">
+            <div
+                onClick={openBar}
+                className="rounded-[16px] cursor-pointer relative font-medium flex shadow-xl min-h-[70px]"
+            >
                 <div className="min-h-full  rounded-l-[16px] w-[32px] bg-[#8D4315]"></div>
 
                 <div className="flex py-[1rem] w-full mx-2 md:mx-[1.5rem] items-center justify-between">
@@ -81,7 +85,7 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
                         </h2>
                     </div>
 
-                    <button onClick={openBar} className="md:mr-[2rem] mr-3">
+                    <button className="md:mr-[2rem] mr-3">
                         {collapseBar ? (
                             <IoIosArrowDown
                                 size={20}
@@ -125,17 +129,21 @@ export const FamilyTreeChild = ({
     onFetchSuccess,
 }: {
     marriedTo: string[]
-    descendants: { name: string }[]
+    descendants: { name: string; picture?: string }[]
     isFirstChild?: boolean
     onFetchSuccess?: () => void
 }) => {
     const [openChild, setOpenChild] = useState<string | null>(null)
     const [childData, setChildData] = useState<{
-        [key: string]: { marriedTo: string[]; descendants: { name: string }[] }
+        [key: string]: {
+            marriedTo: string[]
+            descendants: { name: string; picture: string }[]
+        }
     }>({})
     const [connectorHeight, setConnectorHeight] = useState<number>(0)
     const childRef = useRef<HTMLDivElement>(null)
     const nestedChildRef = useRef<HTMLDivElement>(null)
+    const [loading, setLoading] = useState<{ [key: string]: boolean }>({})
 
     const toggleChild = async (childName: string) => {
         // Toggle the open/close state immediately
@@ -144,6 +152,7 @@ export const FamilyTreeChild = ({
         // Fetch data only when opening the child (if it's not already fetched)
         if (childName !== openChild && !childData[childName]) {
             try {
+                setLoading((prev) => ({ ...prev, [childName]: true }))
                 const encodedName = encodeURIComponent(childName)
                 const response = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL}/family?name=${encodedName}`
@@ -163,8 +172,10 @@ export const FamilyTreeChild = ({
                     // Notify the parent about successful fetch
                     // onFetchSuccess() // Trigger the parent's callback function
                 }
+                setLoading((prev) => ({ ...prev, [childName]: false }))
             } catch (error) {
                 console.error('Error fetching child details:', error)
+                setLoading((prev) => ({ ...prev, [childName]: false }))
             }
         }
     }
@@ -336,8 +347,11 @@ export const FamilyTreeChild = ({
                                         </>
                                     )}
 
-                                <div className="flex md:ml-[5rem] ml-[2rem] items-center justify-between">
-                                    <div className="flex items-center gap-1">
+                                <div
+                                    onClick={() => toggleChild(child.name)}
+                                    className="flex md:ml-[5rem] cursor-pointer ml-[2rem] items-center justify-between"
+                                >
+                                    <div className="flex items-center gap-2">
                                         <span className="w-[25px] h-[25px]">
                                             <Image
                                                 alt="children icon"
@@ -350,12 +364,17 @@ export const FamilyTreeChild = ({
                                         <p className="text-[#7B3A12] font-medium text-[13px] md:text-[14px]">
                                             {child.name}
                                         </p>
+                                        <Avatar
+                                            sx={{ width: 22, height: 22 }}
+                                            src={
+                                                child.picture ||
+                                                'https://www.svgrepo.com/show/23012/profile-user.svg'
+                                            }
+                                            alt={child.name}
+                                        />
                                     </div>
 
-                                    <button
-                                        onClick={() => toggleChild(child.name)}
-                                        className="md:mr-[5rem] z-50 mr-5"
-                                    >
+                                    <button className="md:mr-[5rem] z-50 mr-5">
                                         {openChild === child.name ? (
                                             <IoIosArrowDown
                                                 size={20}
@@ -369,13 +388,46 @@ export const FamilyTreeChild = ({
                                         )}
                                     </button>
                                 </div>
+
+                                {loading[child.name] ? (
+                                    <div className="md:ml-[10%] ml-[5rem] mt-2">
+                                        <CircularProgress
+                                            size={22}
+                                            color="secondary"
+                                        />
+                                    </div>
+                                ) : (
+                                    openChild === child.name &&
+                                    childData[openChild] &&
+                                    childData[openChild].descendants &&
+                                    childData[openChild].descendants.length >
+                                        0 && (
+                                        <div
+                                            key={openChild}
+                                            className="md:ml-[3rem] ml-[0.7rem] mt-[1rem]"
+                                            ref={nestedChildRef}
+                                        >
+                                            <FamilyTreeChild
+                                                marriedTo={
+                                                    childData[openChild]
+                                                        .marriedTo
+                                                }
+                                                descendants={
+                                                    childData[openChild]
+                                                        .descendants
+                                                }
+                                                onFetchSuccess={onFetchSuccess}
+                                            />
+                                        </div>
+                                    )
+                                )}
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
 
-            {openChild && childData[openChild] && (
+            {/* {openChild && childData[openChild] && (
                 <div
                     key={openChild}
                     className="md:ml-[3rem] ml-[0.7rem]  mt-[1rem]"
@@ -387,7 +439,7 @@ export const FamilyTreeChild = ({
                         onFetchSuccess={onFetchSuccess} // Pass the callback to nested child
                     />
                 </div>
-            )}
+            )} */}
         </div>
     )
 }

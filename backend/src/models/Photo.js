@@ -6,7 +6,7 @@ const photoSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true,
-        enum: ['historical', 'recentEvents'], // Restrict to specific values
+        enum: ['historical', 'recentEvents', 'families'], // Restrict to specific values
     },
 })
 

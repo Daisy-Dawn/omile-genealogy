@@ -31,8 +31,10 @@ const validatePhoto = [
     check('type')
         .notEmpty()
         .withMessage('Type is required')
-        .isIn(['historical', 'recentEvents'])
-        .withMessage('Type must be either "historical" or "recentEvents"'),
+        .isIn(['historical', 'recentEvents', 'families'])
+        .withMessage(
+            'Type must be either "historical" or "recentEvents" or "families"'
+        ),
     (req, res, next) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {

@@ -5,6 +5,8 @@ const descendantSchema = new mongoose.Schema({
     children: [
         {
             name: { type: String, required: true }, // Name of each child
+            bio: { type: String, default: '' }, // Bio of each child
+            picture: { type: String, default: '' }, // Picture URL of each child
             _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' }, // Reference to the child document
         },
     ],
