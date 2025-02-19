@@ -73,7 +73,7 @@ const Chronology = () => {
                 <div className="xl:w-1/2 lg:w-2/3 w-full flex flex-col items-center gap-2">
                     {/* header */}
                     <h2 className="font-playfair leading-tight text-brown-gradient-main text-[32px] md:text-[50px] text-center font-medium">
-                        Family Tree
+                        Family Chronology
                     </h2>
 
                     <div className="rounded-[16px] mt-[1.5rem] border-[2px] border-appBrown2 md:px-[2rem] px-[1rem] md:py-3 py-2 w-full flex gap-2">

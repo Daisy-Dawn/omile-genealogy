@@ -15,6 +15,13 @@ export default {
                 appRed: '#D1495B',
                 appYellow: '#F4D35E',
                 appBrown2: '#83410F',
+                treeRed: '#7C0902',
+                treeBlue: '#007FFF',
+                treeGreen: '#004225',
+                treePink: '#FF0090',
+                treeViolet: '#9400D3',
+                treeOrange: '#FF4F00',
+                treeGray: '#8C92AC',
             },
             fontFamily: {
                 inter: ['Inter', 'serif'],
