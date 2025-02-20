@@ -1,10 +1,10 @@
 'use client'
 import { LuSearch } from 'react-icons/lu'
-import { FamilyTreeComp } from '@/components/utils/FamilyTree'
+import FamilyTreeD3 from '@/components/utils/FamilyTree'
 
 export default function FamilyTree() {
     return (
-        <section className="min-h-screen  overflow-x-auto">
+        <section className="min-h-screen ">
             {/* HEADER SECTION */}
             <div className="flex justify-center mx-[1rem] lg:mx-0">
                 <div className="xl:w-1/2 lg:w-2/3 w-full flex flex-col items-center gap-2">
@@ -31,7 +31,7 @@ export default function FamilyTree() {
             </div>
 
             <div className=" h-full mt-[3rem]">
-                <FamilyTreeComp />
+                <FamilyTreeD3 />
             </div>
         </section>
     )
