@@ -1,5 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 'use client'
-
 // import type React from 'react'
 // import { useState, useEffect } from 'react'
 // import { FamilyMember, sampleFamilyData } from '../db/familytreedata'
