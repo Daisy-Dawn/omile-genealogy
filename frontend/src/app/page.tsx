@@ -13,7 +13,7 @@ export default function Home() {
                     </h2>
                     <p className="md:text-[17px] text-[14px] w-[90%] md:w-[80%] text-center">
                         Seven generations of legacy, unity, and tradition
-                        spanning across decades of Omile family history.
+                        spanning across decades of the Omile family history.
                     </p>
                     <Link href="/family-tree">
                         <button className="md:rounded-[16px] rounded-[6px] button-home mt-[1rem] text-white md:text-[15px] text-[13px] md:px-8 px-4 md:py-4 py-2 flex justify-center items-center">
