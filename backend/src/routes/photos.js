@@ -2,6 +2,7 @@ const express = require('express')
 const Photo = require('../models/Photo')
 const { validatePhoto } = require('../middlewares/validations')
 const router = express.Router()
+const { upload, uploadPhoto } = require('../config/uploadController')
 
 // CREATE: Add a new photo
 router.post('/', validatePhoto, async (req, res) => {
@@ -73,5 +74,8 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ error: err.message })
     }
 })
+
+//upload a photo
+router.post('/upload', upload.single('file'), uploadPhoto)
 
 module.exports = router

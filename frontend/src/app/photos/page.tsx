@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import type React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, DragEvent, ChangeEvent } from 'react'
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from 'react-icons/io'
 import { LuSearch } from 'react-icons/lu'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -9,7 +9,7 @@ import { Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import axios from 'axios'
-import { Box, Drawer } from '@mui/material'
+import UploadPhotoDrawer from '@/components/utils/DrawerComp'
 
 type Photo = {
     _id: string
@@ -25,6 +25,11 @@ const Photos = () => {
     const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([])
     const [searchTerm, setSearchTerm] = useState('')
     const [open, setOpen] = useState(false)
+
+    const [file, setFile] = useState<File | null>(null)
+    const [preview, setPreview] = useState<string | null>(null)
+    const [dragging, setDragging] = useState<boolean>(false)
+    const [value, setValue] = useState('historical')
 
     const toggleDrawer =
         (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -75,6 +80,29 @@ const Photos = () => {
 
     const handleButtonClick = (buttonType: string) => {
         setActiveButton(buttonType)
+    }
+
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files?.[0]
+        if (selectedFile) {
+            setFile(selectedFile)
+            setPreview(URL.createObjectURL(selectedFile)) // Generate preview URL
+        }
+    }
+
+    const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault()
+        setDragging(false)
+
+        const droppedFile = event.dataTransfer.files?.[0]
+        if (droppedFile) {
+            setFile(droppedFile)
+            setPreview(URL.createObjectURL(droppedFile)) // Generate preview URL
+        }
+    }
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue((event.target as HTMLInputElement).value)
     }
 
     if (!photos.length) return <p>Loading photos...</p>
@@ -237,25 +265,19 @@ const Photos = () => {
                 </button>
             </div>
 
-            {/* Right-anchored Drawer */}
-            <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-                <Box sx={{ width: 300, padding: 2 }} role="presentation">
-                    <h2 className="text-lg font-semibold mb-4">
-                        Upload Your Photo
-                    </h2>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        className="mb-4 border p-2 w-full"
-                    />
-                    <button
-                        onClick={toggleDrawer(false)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full"
-                    >
-                        Close
-                    </button>
-                </Box>
-            </Drawer>
+            {/* Upload Photo Drawer */}
+            <UploadPhotoDrawer
+                open={open}
+                toggleDrawer={toggleDrawer}
+                dragging={dragging}
+                setDragging={setDragging}
+                file={file}
+                preview={preview}
+                handleDrop={handleDrop}
+                handleFileChange={handleFileChange}
+                value={value}
+                handleChange={handleChange}
+            />
         </section>
     )
 }
