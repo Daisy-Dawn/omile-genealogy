@@ -67,7 +67,13 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
             setDragging(false)
         } catch (error) {
             console.log('Upload error:', error)
-            alert(`Upload failed: ${error.message}`)
+
+            // Ensure error is an instance of Error before accessing message
+            if (error instanceof Error) {
+                alert(`Upload failed: ${error.message}`)
+            } else {
+                alert('An unknown error occurred')
+            }
         }
     }
 
