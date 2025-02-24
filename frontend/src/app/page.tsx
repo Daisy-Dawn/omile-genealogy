@@ -29,14 +29,14 @@ export default function Home() {
 
       {/* tree section */}
       {/* main tree large screen */}
-      <div className="hidden md:block mt-[3rem]">
+      <div className="hidden md:block mt-[0.5rem]">
         {/* tree image container */}
         <div className="flex  justify-center">
           <div className=" relative ">
             <Image
               width={663}
               height={817}
-              src="/images/home/Group 31.png"
+              src="/images/home/tree.png"
               alt="main tree "
             />
 
@@ -77,14 +77,14 @@ export default function Home() {
       </div>
 
       {/* main screen small screen */}
-      <div className=" md:hidden mt-[10rem]">
+      <div className=" md:hidden mt-[1rem]">
         {/* tree image container */}
         <div className="flex  justify-center">
           <div className="p-[2rem] relative ">
             <Image
               width={663}
               height={817}
-              src="/images/home/main-tree-small-screen.png"
+              src="/images/home/tree.png"
               alt="main tree "
             />
           </div>
