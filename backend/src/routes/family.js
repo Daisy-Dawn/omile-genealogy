@@ -89,10 +89,10 @@ router.get('/', async (req, res) => {
     try {
         // Query the database with the filters
         const familyMembers = await Person.find(filters)
-            .skip((sanitizedPage - 1) * sanitizedLimit)
-            .limit(Number(sanitizedLimit))
+            // .skip((sanitizedPage - 1) * sanitizedLimit)
+            // .limit(Number(sanitizedLimit))
             .populate('descendants.children')
-        // .populate('descendants.grandchildren')
+            .populate('descendants.grandchildren')
         // .populate('descendants.greatgrandchildren')
 
         const totalRecords = await Person.countDocuments()
@@ -106,10 +106,10 @@ router.get('/', async (req, res) => {
         // )
 
         res.status(200).json({
-            sanitizedPage,
-            sanitizedLimit,
+            // sanitizedPage,
+            // sanitizedLimit,
             totalRecords,
-            totalPages: Math.ceil(totalRecords / sanitizedLimit),
+            // totalPages: Math.ceil(totalRecords / sanitizedLimit),
             data: familyMembers,
             count: familyMembers.length,
         })

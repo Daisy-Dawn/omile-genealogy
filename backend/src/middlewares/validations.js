@@ -31,7 +31,7 @@ const validatePhoto = [
     check('type')
         .notEmpty()
         .withMessage('Type is required')
-        .isIn(['historical', 'recentEvents', 'families'])
+        .isIn(['historical', 'recentEvents', 'families', 'single-photo'])
         .withMessage(
             'Type must be either "historical" or "recentEvents" or "families"'
         ),

@@ -116,12 +116,13 @@ const Photos = () => {
                         Family photo Gallery
                     </h2>
 
-                    <div className="flex md:gap-3 gap-1 justify-center items-center">
+                    <div className="flex md:gap-3 gap-1 justify-center flex-wrap md:flex-nowrap items-center">
                         {[
                             'All-Photos',
                             'historical',
                             'recentEvents',
                             'families',
+                            'single-photo',
                         ].map((buttonType) => (
                             <button
                                 key={buttonType}
@@ -130,12 +131,14 @@ const Photos = () => {
                                     activeButton === buttonType
                                         ? 'button-home text-white transition-all duration-100'
                                         : 'bg-transparent border-[1px] border-appBrown2 text-appBrown2'
-                                } mt-[1rem] md:text-[15px] text-[11px] sm:text-[13px] md:px-3 px-0 md:py-3 py-2 w-[100px] md:min-w-[150px] flex justify-center items-center`}
+                                } mt-1 md:mt-[1rem] md:text-[15px] text-[11px] sm:text-[13px] md:px-3 px-0 md:py-3 py-2 w-[100px] md:min-w-[150px] flex justify-center items-center`}
                             >
                                 {buttonType === 'All-Photos'
                                     ? 'All Photos'
                                     : buttonType === 'recentEvents'
                                     ? 'Recent Events'
+                                    : buttonType === 'single-photo'
+                                    ? 'Profile Photos'
                                     : buttonType.charAt(0).toUpperCase() +
                                       buttonType.slice(1)}
                             </button>
@@ -268,6 +271,8 @@ const Photos = () => {
             {/* Upload Photo Drawer */}
             <UploadPhotoDrawer
                 open={open}
+                setFile={setFile}
+                setPreview={setPreview}
                 toggleDrawer={toggleDrawer}
                 dragging={dragging}
                 setDragging={setDragging}

@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Box, Drawer } from '@mui/material'
+import { Box, CircularProgress, Drawer } from '@mui/material'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import Autocomplete from '@mui/material/Autocomplete'
+import axios from 'axios'
+import { ApiResponse } from '../types/generalTypes'
 
 type UploadPhotoDrawerProps = {
     open: boolean
@@ -19,9 +23,13 @@ type UploadPhotoDrawerProps = {
     handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void
     value: string
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    setFile: (file: File | null) => void
+    setPreview: (preview: string | null) => void
 }
 
 const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
+    setFile,
+    setPreview,
     open,
     toggleDrawer,
     dragging,
@@ -33,7 +41,44 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
     value,
     handleChange,
 }) => {
-    const [name, setName] = useState('')
+    const [name, setName] = useState<string>('')
+
+    const [familyMembers, setFamilyMembers] = useState<string[]>([])
+
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        const fetchFamilyMembers = async () => {
+            try {
+                const response = await axios.get<ApiResponse>(
+                    `${process.env.NEXT_PUBLIC_API_URL}/family`
+                )
+                const members = response.data.data // Fix: accessing the correct array
+
+                const uniqueNames = new Set<string>()
+                members.forEach((member) => {
+                    uniqueNames.add(member.name)
+                    member.descendants.children?.forEach((child) =>
+                        uniqueNames.add(child.name)
+                    )
+                    member.descendants.grandchildren?.forEach((grandchild) =>
+                        uniqueNames.add(grandchild.name)
+                    )
+                    member.descendants.greatgrandchildren?.forEach(
+                        (greatGrandchild) =>
+                            uniqueNames.add(greatGrandchild.name)
+                    )
+                })
+
+                setFamilyMembers([...uniqueNames])
+            } catch (error) {
+                console.error('Error fetching family members:', error)
+            }
+        }
+
+        fetchFamilyMembers()
+    }, [])
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
@@ -41,6 +86,7 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
             alert('Please upload a file, enter a name, and select a type')
             return
         }
+        setLoading(true)
 
         const formData = new FormData()
         formData.append('file', file)
@@ -59,21 +105,27 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
             const data = await response.json()
             if (!response.ok) {
                 throw new Error(data.message || 'Upload failed')
+            } else {
+                alert('Upload successful! ' + data.message)
+
+                // Reset form fields
+                setName('')
+                setDragging(false)
+                setFile(null)
+                setPreview(null) // Reset preview
+
+                toggleDrawer(false) // Close drawer immediately
             }
-
-            alert('Upload successful!')
-
-            setName('')
-            setDragging(false)
         } catch (error) {
             console.log('Upload error:', error)
 
-            // Ensure error is an instance of Error before accessing message
             if (error instanceof Error) {
                 alert(`Upload failed: ${error.message}`)
             } else {
                 alert('An unknown error occurred')
             }
+        } finally {
+            setLoading(false) // Ensure loading state is reset
         }
     }
 
@@ -91,7 +143,7 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                 role="presentation"
             >
                 <form
-                    className="flex flex-col gap-5"
+                    className="flex flex-col gap-2 lg:gap-5"
                     onSubmit={handleSubmit}
                     action=""
                 >
@@ -154,21 +206,6 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                         )}
                     </div>
 
-                    <div className="mt-[0.5rem] flex flex-col gap-1">
-                        <label
-                            className="text-[16px] text-appBrown2"
-                            htmlFor=""
-                        >
-                            Name
-                        </label>
-                        <input
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="Input name of photo"
-                            className="w-full py-2 px-2 rounded-[16px]  border-[1px] border-appBrown2 flex bg-transparent text-appBrown2 outline-none placeholder:text-opacity-60 placeholder:text-appBrown2"
-                        />
-                    </div>
-
                     <FormControl>
                         <p className="text-appBrown2">Photo Type:</p>
                         <RadioGroup
@@ -191,19 +228,56 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                                 control={<Radio />}
                                 label="Families"
                             />
+                            <FormControlLabel
+                                value="single-photo"
+                                control={<Radio />}
+                                label="Single Photo"
+                            />
                         </RadioGroup>
                     </FormControl>
 
-                    <button className="button-home text-white mt-[1rem] px-4 py-2 rounded-lg w-full">
-                        Submit
-                    </button>
+                    <div className=" flex flex-col gap-1">
+                        {value === 'single-photo' ? (
+                            <Autocomplete
+                                sx={{ width: '100%' }}
+                                options={familyMembers}
+                                value={name || ''}
+                                onChange={(event, newValue) =>
+                                    setName(newValue || '')
+                                }
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Select Name"
+                                        fullWidth
+                                    />
+                                )}
+                            />
+                        ) : (
+                            <>
+                                <label
+                                    className="text-[16px] text-appBrown2"
+                                    htmlFor=""
+                                >
+                                    Name
+                                </label>
+
+                                <input
+                                    value={name || ''}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Input name of photo"
+                                    className="w-full py-2 px-2 rounded-[16px]  border-[1px] border-appBrown2 flex bg-transparent text-appBrown2 outline-none placeholder:text-opacity-60 placeholder:text-appBrown2"
+                                />
+                            </>
+                        )}
+                    </div>
 
                     <button
                         type="submit"
-                        onClick={toggleDrawer(false)}
-                        className="bg-blue-500 text-white mt-[2rem] px-4 py-2 rounded-lg w-full"
+                        // onClick={toggleDrawer(false)}
+                        className="bg-blue-500 text-white mt-3 lg:mt-[2rem] px-4 py-2 rounded-lg w-full"
                     >
-                        Close
+                        {loading ? <CircularProgress size={24} /> : 'Upload'}
                     </button>
                 </form>
             </Box>
