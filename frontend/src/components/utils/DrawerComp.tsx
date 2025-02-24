@@ -231,7 +231,7 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                             <FormControlLabel
                                 value="single-photo"
                                 control={<Radio />}
-                                label="Single Photo"
+                                label="Profile Photo"
                             />
                         </RadioGroup>
                     </FormControl>
