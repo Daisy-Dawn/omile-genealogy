@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css";
+// import Tippy from "@tippyjs/react";
+// import "tippy.js/dist/tippy.css";
 
 export default function FamilyTree() {
   const profiles = [
