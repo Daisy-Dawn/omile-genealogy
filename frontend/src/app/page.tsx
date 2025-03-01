@@ -1,108 +1,113 @@
 "use client";
 
 import Image from "next/image";
-// import Tippy from "@tippyjs/react";
-// import "tippy.js/dist/tippy.css";
+import Link from "next/link";
 
-export default function FamilyTree() {
-  const profiles = [
-    {
-      image: "/images/home/1.jpg",
-      name: "Muo Ndichie Omile (Nnaebue)",
-      bio: "The First Son of Okonkwo Ndichie Omile",
-    },
-    {
-      image: "/images/home/2.jpg",
-      name: "Joackim Ibeachuzinam Omile (Akulueno)",
-      bio: "The Second Son of Okonkwo Nichie Omile",
-    },
-    {
-      image: "/images/home/3.jpg",
-      name: "Benjamin Orakwute (Okpokora)",
-      bio: "The 3rd Son of Okonkwo Nichie Omile",
-    },
-    {
-      image: "/images/home/e.png",
-      name: "Unknown",
-      bio: "This profile has no available biography",
-    },
-    {
-      image: "/images/home/5th.png",
-      name: "Roselin Udumelue Anyaeche (Nne Omile)",
-      bio: "5th daughter of Okonkwo Nichie Omile",
-    },
-    {
-      image: "/images/home/f.jpg",
-      name: "Unknown",
-      bio: "This profile has no available biography",
-    },
-    {
-      image: "/images/home/7.png",
-      name: "Grace Okuazanwa Akunne (Nne Omile)",
-      bio: "The Last daughter of Okonkwo Nichie Omile",
-    },
-  ];
-
+export default function Home() {
   return (
-    <section className="relative flex flex-col items-center">
+    <section className="relative">
       {/* HEADER SECTION */}
-      <div className="text-center max-w-2xl mx-auto">
-        <h2 className="font-playfair leading-tight text-brown-gradient-main text-[32px] md:text-[50px] font-medium">
-          Tracing Our Roots: The Omile Family Heritage.
-        </h2>
-        <p className="md:text-[17px] text-[14px] w-[90%] md:w-[80%] mx-auto">
-          Seven generations of legacy, unity, and tradition spanning across
-          decades of Omile family history.
-        </p>
+      <div className="flex justify-center">
+        <div className="lg:w-1/2 w-full flex flex-col items-center gap-2">
+          {/* header */}
+          <h2 className="font-playfair leading-tight text-brown-gradient-main text-[32px] md:text-[50px] text-center font-medium">
+            Tracing Our Roots: The Omile Family Heritage.
+          </h2>
+
+          <p className="md:text-[17px] text-[14px] w-[90%] md:w-[80%] text-center">
+            Seven generations of legacy, unity, and tradition spanning across
+            decades of Omile family history
+          </p>
+
+          <Link href="/family-tree">
+            <button className="md:rounded-[16px] rounded-[6px] button-home mt-[1rem] text-white md:text-[15px] text-[13px] md:px-8 px-4 md:py-4 py-2 flex justify-center items-center">
+              Explore our family tree
+            </button>
+          </Link>
+        </div>
       </div>
 
-      {/* FAMILY TREE SECTION */}
-      <div
-        className="relative w-[600px] h-[600px] mt-6 bg-cover bg-center"
-        style={{ backgroundImage: "url(/images/home/tree.png)" }}
-      >
-        {/* Profiles with Tooltips */}
-        {profiles.map((profile, index) => (
-          <Tippy
-            key={index}
-            content={
-              <span>
-                <strong>{profile.name}</strong> <br />
-                {profile.bio}
-              </span>
-            }
-            placement="top"
-            allowHTML={true}
-          >
-            <div
-              className="absolute w-20 h-20 border-4 border-white-400 rounded-full overflow-hidden cursor-pointer transition-transform transform hover:scale-110"
-              style={getProfilePosition(index)}
-            >
-              <Image
-                src={profile.image}
-                alt={profile.name}
-                width={80}
-                height={80}
-                objectFit="cover"
-              />
-            </div>
-          </Tippy>
-        ))}
+      {/* tree section */}
+      {/* main tree large screen */}
+      <div className="hidden md:block mt-[0.5rem]">
+        {/* tree image container */}
+        <div className="flex  justify-center">
+          <div className=" relative ">
+            <Image
+              width={663}
+              height={817}
+              src="/images/home/tree.png"
+              alt="main tree "
+            />
+
+            {/* first image */}
+            {/* <div className="absolute border-appBrown2 border-[2px] flex justify-center items-center top-0 h-[60px] w-[60px] left-[50%] rounded-full  overflow-hidden">
+                            <Image
+                                width={60} 
+                                height={60}
+                                src="/images/home/test.jpg"
+                                alt="main tree"
+                                className="w-full h-full object-cover"
+                            />
+                        </div> */}
+
+            {/* second line, image left */}
+            {/* <div className="absolute border-appBrown2 border-[2px] flex justify-center items-center top-[25%] h-[60px] w-[60px] left-[11%] rounded-full  overflow-hidden">
+                            <Image
+                                width={60} 
+                                height={60}
+                                src="/images/home/test.jpg"
+                                alt="main tree"
+                                className="w-full h-full object-cover"
+                            />
+                        </div> */}
+
+            {/* second line, image right */}
+            {/* <div className="absolute border-appBrown2 border-[2px] flex justify-center items-center top-[25%] h-[60px] w-[60px] right-[11%] rounded-full  overflow-hidden">
+                            <Image
+                                width={60} 
+                                height={60}
+                                src="/images/home/test.jpg"
+                                alt="main tree"
+                                className="w-full h-full object-cover"
+                            />
+                        </div> */}
+          </div>
+        </div>
+      </div>
+
+      {/* main screen small screen */}
+      <div className=" md:hidden mt-[1rem]">
+        {/* tree image container */}
+        <div className="flex  justify-center">
+          <div className="p-[2rem] relative ">
+            <Image
+              width={663}
+              height={817}
+              src="/images/home/tree.png"
+              alt="main tree "
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* two branches */}
+      <div className="absolute md:hidden top-[25%] left-0">
+        <Image
+          width={150}
+          height={179}
+          src="/images/home/small-screen-palm-left.png"
+          alt="main tree "
+        />
+      </div>
+      <div className="absolute md:hidden top-[25%] right-0">
+        <Image
+          width={150}
+          height={179}
+          src="/images/home/small-screen-palm-right.png"
+          alt="main tree "
+        />
       </div>
     </section>
   );
-}
-
-// Function to set profile positions
-function getProfilePosition(index: number) {
-  const positions = [
-    { top: "50px", left: "250px" },
-    { top: "150px", left: "100px" },
-    { top: "150px", left: "400px" },
-    { top: "250px", left: "50px" },
-    { top: "250px", left: "500px" },
-    { top: "350px", left: "150px" },
-    { top: "350px", left: "400px" },
-  ];
-  return positions[index] || {};
 }
