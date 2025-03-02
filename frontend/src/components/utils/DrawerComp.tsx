@@ -42,6 +42,7 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
     handleChange,
 }) => {
     const [name, setName] = useState<string>('')
+    const [selectedTags, setSelectedTags] = useState<string[]>([])
 
     const [familyMembers, setFamilyMembers] = useState<string[]>([])
 
@@ -53,24 +54,39 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                 const response = await axios.get<ApiResponse>(
                     `${process.env.NEXT_PUBLIC_API_URL}/family`
                 )
-                const members = response.data.data // Fix: accessing the correct array
+                const members = response.data.data
 
                 const uniqueNames = new Set<string>()
+
                 members.forEach((member) => {
-                    uniqueNames.add(member.name)
+                    uniqueNames.add(member.name.trim().toLowerCase())
+
                     member.descendants.children?.forEach((child) =>
-                        uniqueNames.add(child.name)
+                        uniqueNames.add(child.name.trim().toLowerCase())
                     )
                     member.descendants.grandchildren?.forEach((grandchild) =>
-                        uniqueNames.add(grandchild.name)
+                        uniqueNames.add(grandchild.name.trim().toLowerCase())
                     )
                     member.descendants.greatgrandchildren?.forEach(
                         (greatGrandchild) =>
-                            uniqueNames.add(greatGrandchild.name)
+                            uniqueNames.add(
+                                greatGrandchild.name.trim().toLowerCase()
+                            )
                     )
                 })
 
-                setFamilyMembers([...uniqueNames])
+                // Convert back to original case format by mapping from original data
+                const normalizedNames = Array.from(uniqueNames).map(
+                    (lowerName) => {
+                        const foundMember = members.find(
+                            (member) =>
+                                member.name.trim().toLowerCase() === lowerName
+                        )
+                        return foundMember ? foundMember.name.trim() : lowerName
+                    }
+                )
+
+                setFamilyMembers(normalizedNames)
             } catch (error) {
                 console.error('Error fetching family members:', error)
             }
@@ -88,9 +104,18 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
         }
         setLoading(true)
 
+        // Construct the final name format
+        let formattedName = name.trim() // Ensure no leading/trailing spaces
+        if (selectedTags.length > 0) {
+            const tagsString = selectedTags.join(', ')
+            formattedName = formattedName
+                ? `${formattedName}: ${tagsString}`
+                : tagsString
+        }
+
         const formData = new FormData()
         formData.append('file', file)
-        formData.append('name', name)
+        formData.append('name', formattedName)
         formData.append('type', value)
 
         try {
@@ -236,8 +261,23 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                         </RadioGroup>
                     </FormControl>
 
-                    <div className=" flex flex-col gap-1">
-                        {value === 'single-photo' ? (
+                    <div className="flex flex-col gap-1">
+                        {value === 'historical' ? (
+                            <>
+                                <label
+                                    className="text-[16px] text-appBrown2"
+                                    htmlFor="name"
+                                >
+                                    Name:
+                                </label>
+                                <input
+                                    value={name || ''}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Input name"
+                                    className="w-full py-2 px-2 rounded-[16px] mb-2 border-[1px] border-appBrown2 bg-transparent text-appBrown2 outline-none placeholder:text-opacity-60 placeholder:text-appBrown2"
+                                />
+                            </>
+                        ) : value === 'single-photo' ? (
                             <Autocomplete
                                 sx={{ width: '100%' }}
                                 options={familyMembers}
@@ -253,23 +293,83 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                                     />
                                 )}
                             />
-                        ) : (
+                        ) : value === 'recentEvents' ? (
                             <>
                                 <label
                                     className="text-[16px] text-appBrown2"
-                                    htmlFor=""
+                                    htmlFor="event"
                                 >
-                                    Name
+                                    Event:
                                 </label>
-
                                 <input
                                     value={name || ''}
                                     onChange={(e) => setName(e.target.value)}
-                                    placeholder="Input name of photo"
-                                    className="w-full py-2 px-2 rounded-[16px]  border-[1px] border-appBrown2 flex bg-transparent text-appBrown2 outline-none placeholder:text-opacity-60 placeholder:text-appBrown2"
+                                    placeholder="Input event name"
+                                    className="w-full py-2 px-2 rounded-[16px] mb-2 border-[1px] border-appBrown2 bg-transparent text-appBrown2 outline-none placeholder:text-opacity-60 placeholder:text-appBrown2"
+                                />
+
+                                <label
+                                    className="text-[16px] text-appBrown2"
+                                    htmlFor="event-tags"
+                                >
+                                    Tags
+                                </label>
+                                <Autocomplete
+                                    multiple
+                                    sx={{ width: '100%' }}
+                                    options={familyMembers}
+                                    value={selectedTags}
+                                    onChange={(event, newValue) =>
+                                        setSelectedTags(newValue)
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Select Names"
+                                            fullWidth
+                                        />
+                                    )}
                                 />
                             </>
-                        )}
+                        ) : value === 'families' ? (
+                            <>
+                                <label
+                                    className="text-[16px] text-appBrown2"
+                                    htmlFor="family-name"
+                                >
+                                    Family Name:
+                                </label>
+                                <input
+                                    value={name || ''}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Input family name"
+                                    className="w-full py-2 px-2 rounded-[16px] mb-2 border-[1px] border-appBrown2 bg-transparent text-appBrown2 outline-none placeholder:text-opacity-60 placeholder:text-appBrown2"
+                                />
+
+                                <label
+                                    className="text-[16px] text-appBrown2"
+                                    htmlFor="family-name-tags"
+                                >
+                                    Tags
+                                </label>
+                                <Autocomplete
+                                    multiple
+                                    sx={{ width: '100%' }}
+                                    options={familyMembers}
+                                    value={selectedTags}
+                                    onChange={(event, newValue) =>
+                                        setSelectedTags(newValue)
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Select Names"
+                                            fullWidth
+                                        />
+                                    )}
+                                />
+                            </>
+                        ) : null}
                     </div>
 
                     <button
@@ -277,7 +377,11 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                         // onClick={toggleDrawer(false)}
                         className="bg-blue-500 text-white mt-3 lg:mt-[2rem] px-4 py-2 rounded-lg w-full"
                     >
-                        {loading ? <CircularProgress size={24} /> : 'Upload'}
+                        {loading ? (
+                            <CircularProgress color="success" size={24} />
+                        ) : (
+                            'Upload'
+                        )}
                     </button>
                 </form>
             </Box>

@@ -10,8 +10,9 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import axios from 'axios'
 import UploadPhotoDrawer from '@/components/utils/DrawerComp'
+import { CircularProgress } from '@mui/material'
 
-type Photo = {
+export type Photo = {
     _id: string
     photourl: string
     name: string
@@ -105,7 +106,12 @@ const Photos = () => {
         setValue((event.target as HTMLInputElement).value)
     }
 
-    if (!photos.length) return <p>Loading photos...</p>
+    if (!photos.length)
+        return (
+            <div className="min-h-[50vh] flex justify-center items-center">
+                <CircularProgress size={27} color="secondary" />
+            </div>
+        )
 
     return (
         <section className="min-h-screen mb-[2rem]">
@@ -162,7 +168,7 @@ const Photos = () => {
                 {filteredPhotos.length > 0 ? (
                     <>
                         {/* Large image display */}
-                        <div className="rounded-[29px] md:col-span-2 shadow-xl bg-[#FDEBDD] overflow-hidden">
+                        <div className="rounded-[29px] h-fit md:col-span-2 shadow-xl bg-[#FDEBDD] overflow-hidden">
                             <div className="md:h-[400px] h-[350px] w-full">
                                 <Image
                                     width={400}
@@ -221,6 +227,11 @@ const Photos = () => {
                                                         className="w-full h-full object-cover"
                                                     />
                                                 </div>
+                                                <div className="py-2 px-[1rem]">
+                                                    <p className="text-appBrown2 capitalize font-medium">
+                                                        {photo.name}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </SwiperSlide>
                                     ))}
@@ -228,7 +239,7 @@ const Photos = () => {
                             </div>
 
                             {/* Scroll Buttons */}
-                            <div className="w-full gap-3 flex flex-col justify-center items-center mt-[2.5rem]">
+                            <div className="w-full gap-3 flex flex-col justify-center items-center mt-0">
                                 <div className="rounded-[33px] w-[150px] bg-[#FDEBDD] border-[1px] border-appBrown2 px-[0.7rem] py-[0.5rem] flex justify-between items-center">
                                     <button className="custom-prev">
                                         <IoIosArrowRoundBack

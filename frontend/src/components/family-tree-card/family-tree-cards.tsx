@@ -5,21 +5,13 @@ import { IoIosArrowForward } from 'react-icons/io'
 import { IoIosArrowDown } from 'react-icons/io'
 import Image from 'next/image'
 import { Avatar, CircularProgress } from '@mui/material'
+import Gallery from '../gallery/Gallery'
 
 export const FamilyTreeParent = ({ name }: { name: string }) => {
     const [collapseBar, setCollapseBar] = useState(false)
     const [marriedTo, setMarriedTo] = useState<string[]>([])
     const [descendants, setDescendants] = useState<{ name: string }[]>([])
     const [loading, setLoading] = useState(true)
-    // const [barWidth, setBarWidth] = useState(35)
-    // const [fetchSuccessful, setFetchSuccessful] = useState(false)
-
-    // Callback to be passed to the child component to notify the parent
-    // const handleFetchSuccess = () => {
-    //     setFetchSuccessful(true)
-    //     // Increase the width by 2rem (32px) after successful data fetch
-    //     setBarWidth((prevWidth) => (prevWidth += 35))
-    // }
 
     useEffect(() => {
         const fetchFamilyTree = async () => {
@@ -105,9 +97,9 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
                 <div className="relative">
                     <div className="md:ml-[2rem] ml-[0.7rem] mt-[1rem]">
                         {loading ? (
-                            <p className="text-gray-500 text-sm ml-4">
-                                Loading...
-                            </p>
+                            <div className="p-4">
+                                <CircularProgress size={22} color="secondary" />
+                            </div>
                         ) : (
                             <FamilyTreeChild
                                 marriedTo={marriedTo}
@@ -133,6 +125,8 @@ export const FamilyTreeChild = ({
     isFirstChild?: boolean
     onFetchSuccess?: () => void
 }) => {
+    const [showGallery, setShowGallery] = useState(false)
+    const [selectedChild, setSelectedChild] = useState<string | null>(null)
     const [openChild, setOpenChild] = useState<string | null>(null)
     const [childData, setChildData] = useState<{
         [key: string]: {
@@ -347,10 +341,7 @@ export const FamilyTreeChild = ({
                                         </>
                                     )}
 
-                                <div
-                                    onClick={() => toggleChild(child.name)}
-                                    className="flex md:ml-[5rem] cursor-pointer ml-[2rem] items-center justify-between"
-                                >
+                                <div className="flex md:ml-[5rem] cursor-pointer ml-[2rem] items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <span className="w-[25px] h-[25px]">
                                             <Image
@@ -361,17 +352,46 @@ export const FamilyTreeChild = ({
                                                 className="w-full h-full object-contain"
                                             />
                                         </span>
-                                        <p className="text-[#7B3A12] font-medium text-[13px] md:text-[14px]">
+                                        <p
+                                            onClick={() =>
+                                                toggleChild(child.name)
+                                            }
+                                            className="text-[#7B3A12] font-medium text-[13px] md:text-[14px]"
+                                        >
                                             {child.name}
                                         </p>
-                                        <Avatar
-                                            sx={{ width: 22, height: 22 }}
-                                            src={
-                                                child.picture ||
-                                                'https://www.svgrepo.com/show/23012/profile-user.svg'
-                                            }
-                                            alt={child.name}
-                                        />
+                                        <>
+                                            {/* Avatar Click Triggers Gallery */}
+                                            <div
+                                                onClick={() => {
+                                                    setSelectedChild(child.name) // Store selected child's name
+                                                    setShowGallery(true)
+                                                }}
+                                                className="cursor-pointer"
+                                            >
+                                                <Avatar
+                                                    sx={{
+                                                        width: 22,
+                                                        height: 22,
+                                                    }}
+                                                    src={
+                                                        child.picture ||
+                                                        'https://www.svgrepo.com/show/23012/profile-user.svg'
+                                                    }
+                                                    alt={child.name}
+                                                />
+                                            </div>
+
+                                            {/* Show Gallery When `showGallery` is True */}
+                                            {showGallery && selectedChild && (
+                                                <Gallery
+                                                    onClose={() =>
+                                                        setShowGallery(false)
+                                                    }
+                                                    childName={selectedChild}
+                                                />
+                                            )}
+                                        </>
                                     </div>
 
                                     <button className="md:mr-[5rem] z-50 mr-5">

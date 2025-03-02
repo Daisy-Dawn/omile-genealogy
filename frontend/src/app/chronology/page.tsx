@@ -5,6 +5,7 @@ import {
     FamilyTreeParent,
     FamilyTreeChild,
 } from '@/components/family-tree-card/family-tree-cards'
+import { CircularProgress } from '@mui/material'
 
 const Chronology = () => {
     const [marriedTo, setMarriedTo] = useState<string[]>([])
@@ -100,7 +101,11 @@ const Chronology = () => {
                         <h3 className="text-appBrown2 md:text-[15px] text-[13px] font-medium ">
                             Searching for the descendants of: {searchedName}
                         </h3>
-                        {loading && <p>Loading...</p>}
+                        {loading && (
+                            <div className="p-4">
+                                <CircularProgress size={22} color="secondary" />
+                            </div>
+                        )}
                         {descendants.length > 0 ? (
                             <FamilyTreeChild
                                 marriedTo={marriedTo}
