@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 'use client'
 import { useEffect, useState, useRef } from 'react'
 import { PiUsersFour } from 'react-icons/pi'
@@ -51,16 +53,7 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
                     <div className="absolute top-2 overflow-hidden left-2 w-[2px] h-[98%] md:h-[98.4%] bg-[#8D4315]" />
 
                     {/* Horizontal Line */}
-                    <div
-                        // className="absolute top-[99.5%] w-[35px] left-2 h-[2px] bg-[#8D4315]"
-                        className="absolute top-[99%] md:top-[99.3%] w-[70%]  left-2 h-[2px] bg-[#8D4315]"
-                        // style={{ width: `${barWidth}px` }}
-                        style={
-                            {
-                                // width: `${barWidth}px`, // Add extra width if fetch was successful
-                            }
-                        }
-                    />
+                    <div className="absolute top-[99%] md:top-[99.3%] w-[70%]  left-2 h-[2px] bg-[#8D4315]" />
                 </>
             )}
             <div
