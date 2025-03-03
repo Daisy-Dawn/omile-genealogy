@@ -106,24 +106,47 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                 const uniqueNames = new Set<string>()
 
                 members.forEach((member) => {
-                    uniqueNames.add(member.name.trim().toLowerCase())
+                    if (member.name) {
+                        uniqueNames.add(member.name.trim().toLowerCase())
+                    }
 
-                    member.descendants.marriedTo?.forEach((spouse) =>
-                        uniqueNames.add(spouse.name.trim().toLowerCase())
-                    )
+                    if (member.descendants) {
+                        member.descendants.marriedTo?.forEach((spouse) => {
+                            if (spouse?.name) {
+                                uniqueNames.add(
+                                    spouse.name.trim().toLowerCase()
+                                )
+                            }
+                        })
 
-                    member.descendants.children?.forEach((child) =>
-                        uniqueNames.add(child.name.trim().toLowerCase())
-                    )
-                    member.descendants.grandchildren?.forEach((grandchild) =>
-                        uniqueNames.add(grandchild.name.trim().toLowerCase())
-                    )
-                    member.descendants.greatgrandchildren?.forEach(
-                        (greatGrandchild) =>
-                            uniqueNames.add(
-                                greatGrandchild.name.trim().toLowerCase()
-                            )
-                    )
+                        member.descendants.children?.forEach((child) => {
+                            if (child?.name) {
+                                uniqueNames.add(child.name.trim().toLowerCase())
+                            }
+                        })
+
+                        member.descendants.grandchildren?.forEach(
+                            (grandchild) => {
+                                if (grandchild?.name) {
+                                    uniqueNames.add(
+                                        grandchild.name.trim().toLowerCase()
+                                    )
+                                }
+                            }
+                        )
+
+                        member.descendants.greatgrandchildren?.forEach(
+                            (greatGrandchild) => {
+                                if (greatGrandchild?.name) {
+                                    uniqueNames.add(
+                                        greatGrandchild.name
+                                            .trim()
+                                            .toLowerCase()
+                                    )
+                                }
+                            }
+                        )
+                    }
                 })
 
                 // Convert back to original case format by mapping from original data
@@ -131,7 +154,7 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                     (lowerName) => {
                         const foundMember = members.find(
                             (member) =>
-                                member.name.trim().toLowerCase() === lowerName
+                                member.name?.trim().toLowerCase() === lowerName
                         )
                         return foundMember ? foundMember.name.trim() : lowerName
                     }

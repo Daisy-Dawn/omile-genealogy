@@ -233,7 +233,7 @@ const uploadPhoto = async (req, res) => {
             $or: [
                 { name: { $regex: new RegExp(`^${escapedName}$`, 'i') } }, // Direct match
                 {
-                    'descendants.marriedto.name': {
+                    'descendants.marriedTo.name': {
                         $regex: new RegExp(`^${escapedName}$`, 'i'),
                     },
                 }, // Spouse match
@@ -270,36 +270,72 @@ const uploadPhoto = async (req, res) => {
             }
 
             // Update picture in nested fields including marriedto
-            await Person.updateOne(
-                { _id: person._id },
+            // await Person.updateOne(
+            //     { _id: person._id },
+            //     {
+            //         $set: {
+            //             ...updateQuery,
+            //             'descendants.marriedTo.$[spouse].picture': imageUrl,
+            //             'descendants.children.$[child].picture': imageUrl,
+            //             'descendants.grandchildren.$[grandchild].picture':
+            //                 imageUrl,
+            //         },
+            //     },
+            //     {
+            //         arrayFilters: [
+            //             {
+            //                 'spouse.name': {
+            //                     $regex: new RegExp(`^${escapedName}$`, 'i'),
+            //                 },
+            //             },
+            //             {
+            //                 'child.name': {
+            //                     $regex: new RegExp(`^${escapedName}$`, 'i'),
+            //                 },
+            //             },
+            //             {
+            //                 'grandchild.name': {
+            //                     $regex: new RegExp(`^${escapedName}$`, 'i'),
+            //                 },
+            //             },
+            //         ],
+            //     }
+            // )
+            // Update main person
+            // Update the main person (if name matches exactly)
+            await Person.updateMany(
+                { name: { $regex: new RegExp(`^${escapedName}$`, 'i') } },
+                { $set: { picture: imageUrl } }
+            )
+
+            // Update all spouses named `Paul`
+            await Person.updateMany(
                 {
-                    $set: {
-                        ...updateQuery,
-                        'descendants.marriedTo.$[spouse].picture': imageUrl,
-                        'descendants.children.$[child].picture': imageUrl,
-                        'descendants.grandchildren.$[grandchild].picture':
-                            imageUrl,
+                    'descendants.marriedTo.name': {
+                        $regex: new RegExp(`^${escapedName}$`, 'i'),
                     },
                 },
+                { $set: { 'descendants.marriedTo.$[].picture': imageUrl } } // Updates all matching spouses
+            )
+
+            // Update all children named `Paul`
+            await Person.updateMany(
                 {
-                    arrayFilters: [
-                        {
-                            'spouse.name': {
-                                $regex: new RegExp(`^${escapedName}$`, 'i'),
-                            },
-                        },
-                        {
-                            'child.name': {
-                                $regex: new RegExp(`^${escapedName}$`, 'i'),
-                            },
-                        },
-                        {
-                            'grandchild.name': {
-                                $regex: new RegExp(`^${escapedName}$`, 'i'),
-                            },
-                        },
-                    ],
-                }
+                    'descendants.children.name': {
+                        $regex: new RegExp(`^${escapedName}$`, 'i'),
+                    },
+                },
+                { $set: { 'descendants.children.$[].picture': imageUrl } } // Updates all matching children
+            )
+
+            // Update all grandchildren named `Paul`
+            await Person.updateMany(
+                {
+                    'descendants.grandchildren.name': {
+                        $regex: new RegExp(`^${escapedName}$`, 'i'),
+                    },
+                },
+                { $set: { 'descendants.grandchildren.$[].picture': imageUrl } } // Updates all matching grandchildren
             )
         }
 
