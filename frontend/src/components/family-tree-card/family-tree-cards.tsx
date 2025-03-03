@@ -97,6 +97,7 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
                             </div>
                         ) : (
                             <FamilyTreeChild
+                                // @ts-ignore
                                 marriedTo={marriedTo}
                                 descendants={descendants}
                                 isFirstChild
