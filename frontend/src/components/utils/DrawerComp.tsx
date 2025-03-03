@@ -126,16 +126,12 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
                     )
                 })
 
-                // Convert back to original case format
+                // Convert back to original case format by mapping from original data
                 const normalizedNames = Array.from(uniqueNames).map(
                     (lowerName) => {
                         const foundMember = members.find(
                             (member) =>
-                                member.name.trim().toLowerCase() ===
-                                    lowerName ||
-                                member.descendants.marriedTo?.name
-                                    ?.trim()
-                                    .toLowerCase() === lowerName
+                                member.name.trim().toLowerCase() === lowerName
                         )
                         return foundMember ? foundMember.name.trim() : lowerName
                     }

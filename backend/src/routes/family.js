@@ -95,7 +95,7 @@ router.get('/', async (req, res) => {
         const familyMembers = await Person.find(filters)
             // .skip((sanitizedPage - 1) * sanitizedLimit)
             // .limit(Number(sanitizedLimit))
-            .populate('descendants.marriedTo._id')
+            .populate('descendants.marriedTo')
             .populate('descendants.children')
             .populate('descendants.grandchildren')
         // .populate('descendants.greatgrandchildren')
