@@ -12,7 +12,11 @@ router.post('/', validateFamilyMember, async (req, res) => {
 
         // Prepare descendants fields
         const marriedToArray = Array.isArray(descendants?.marriedTo)
-            ? descendants.marriedTo
+            ? descendants.marriedTo.map((spouse) => ({
+                  _id: spouse._id || new mongoose.Types.ObjectId(),
+                  name: spouse.name,
+                  picture: spouse.picture || '',
+              }))
             : []
 
         const children =
@@ -91,6 +95,7 @@ router.get('/', async (req, res) => {
         const familyMembers = await Person.find(filters)
             // .skip((sanitizedPage - 1) * sanitizedLimit)
             // .limit(Number(sanitizedLimit))
+            .populate('descendants.marriedTo._id')
             .populate('descendants.children')
             .populate('descendants.grandchildren')
         // .populate('descendants.greatgrandchildren')
@@ -201,6 +206,15 @@ router.put('/:id', validateFamilyMember, async (req, res) => {
 
         // Handle descendants transformation if provided
         if (updateData.descendants) {
+            if (updateData.descendants.marriedTo) {
+                updateData.descendants.marriedTo =
+                    updateData.descendants.marriedTo.map((spouse) => ({
+                        _id: spouse._id || new mongoose.Types.ObjectId(),
+                        name: spouse.name,
+                        picture: spouse.picture || '',
+                    }))
+            }
+
             if (updateData.descendants.children) {
                 updateData.descendants.children =
                     updateData.descendants.children.map((child) => ({

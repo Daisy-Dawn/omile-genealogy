@@ -9,7 +9,9 @@ import Gallery from '../gallery/Gallery'
 
 export const FamilyTreeParent = ({ name }: { name: string }) => {
     const [collapseBar, setCollapseBar] = useState(false)
-    const [marriedTo, setMarriedTo] = useState<string[]>([])
+    const [marriedTo, setMarriedTo] = useState<
+        { name: string; picture?: string; _id: string }[]
+    >([])
     const [descendants, setDescendants] = useState<{ name: string }[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -120,7 +122,7 @@ export const FamilyTreeChild = ({
     descendants,
     onFetchSuccess,
 }: {
-    marriedTo: string[]
+    marriedTo: { name: string; picture?: string; _id: string }[]
     descendants: { name: string; picture?: string }[]
     isFirstChild?: boolean
     onFetchSuccess?: () => void
@@ -130,7 +132,7 @@ export const FamilyTreeChild = ({
     const [openChild, setOpenChild] = useState<string | null>(null)
     const [childData, setChildData] = useState<{
         [key: string]: {
-            marriedTo: string[]
+            marriedTo: { name: string; picture?: string; _id: string }[]
             descendants: { name: string; picture: string }[]
         }
     }>({})
@@ -232,7 +234,7 @@ export const FamilyTreeChild = ({
                                     />
                                 </span>
                                 <p className="text-[#7B3A12] font-medium text-[13px] md:text-[14px]">
-                                    {spouse}
+                                    {spouse.name}
                                 </p>
                             </div>
                         ))}
@@ -254,8 +256,8 @@ export const FamilyTreeChild = ({
                                 Married To:
                             </span>
                         </div>
-                        {marriedTo.map((spouse, index) => (
-                            <div key={index} className="relative">
+                        {marriedTo.map((spouse) => (
+                            <div key={spouse._id} className="relative">
                                 <div className="flex md:ml-[5rem] ml-[2rem] items-center justify-between">
                                     <div className="flex items-center gap-1 md:gap-3">
                                         <span className="md:w-[20px] w-[20px] h-[20px] hidden md:block md:h-[20px]">
@@ -268,8 +270,27 @@ export const FamilyTreeChild = ({
                                             />
                                         </span>
                                         <p className="text-[#7B3A12] font-medium text-[13px] md:text-[14px]">
-                                            {spouse}
+                                            {spouse.name}
                                         </p>
+                                        <div
+                                            // onClick={() => {
+                                            //     setSelectedChild(child.name) // Store selected child's name
+                                            //     setShowGallery(true)
+                                            // }}
+                                            className="cursor-pointer"
+                                        >
+                                            <Avatar
+                                                sx={{
+                                                    width: 22,
+                                                    height: 22,
+                                                }}
+                                                src={
+                                                    spouse.picture ||
+                                                    'https://www.svgrepo.com/show/23012/profile-user.svg'
+                                                }
+                                                alt={spouse.name}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

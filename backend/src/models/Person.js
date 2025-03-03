@@ -1,31 +1,37 @@
 const mongoose = require('mongoose')
 
+const spouseSchema = new mongoose.Schema({
+    _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' }, // Reference to the spouse
+    name: { type: String, required: true }, // Name of the spouse
+    picture: { type: String, default: '' }, // Picture URL of the spouse
+})
+
 const descendantSchema = new mongoose.Schema({
-    marriedTo: { type: [String], default: [] }, // spouses as an array of strings
+    marriedTo: { type: [spouseSchema], default: [] }, // Array of spouse objects
     children: [
         {
-            name: { type: String, required: true }, // Name of each child
-            bio: { type: String, default: '' }, // Bio of each child
-            picture: { type: String, default: '' }, // Picture URL of each child
-            _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' }, // Reference to the child document
+            name: { type: String, required: true },
+            bio: { type: String, default: '' },
+            picture: { type: String, default: '' },
+            _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
         },
     ],
     grandchildren: [
         {
-            name: { type: String, required: true }, // Name of each grandchild
-            bio: { type: String, default: '' }, // Bio of each grandchild
-            picture: { type: String, default: '' }, // Picture URL of each grandchild
-            marriedTo: { type: [String], default: [] }, // Spouses for grandchildren
-            _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' }, // Reference to the grandchild document
+            name: { type: String, required: true },
+            bio: { type: String, default: '' },
+            picture: { type: String, default: '' },
+            marriedTo: { type: [spouseSchema], default: [] }, // Updated structure for grandchildren
+            _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
         },
     ],
     greatgrandchildren: [
         {
-            name: { type: String, required: true }, // Name of each great-grandchild
-            bio: { type: String, default: '' }, // Bio of each great-grandchild
-            picture: { type: String, default: '' }, // Picture URL of each great-grandchild
-            marriedTo: { type: [String], default: [] }, // Spouses for great-grandchildren
-            _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' }, // Reference to the great-grandchild document
+            name: { type: String, required: true },
+            bio: { type: String, default: '' },
+            picture: { type: String, default: '' },
+            marriedTo: { type: [spouseSchema], default: [] }, // Updated structure for great-grandchildren
+            _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
         },
     ],
 })

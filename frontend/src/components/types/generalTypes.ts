@@ -5,7 +5,7 @@ export type FamilyMember = {
     bio: string
     picture: string
     descendants: {
-        marriedTo: string[]
+        marriedTo: { name: string; _id: string; picture: string }[]
         children: { name: string; _id: string; bio: string; picture: string }[]
         grandchildren: {
             name: string
