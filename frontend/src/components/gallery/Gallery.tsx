@@ -11,10 +11,10 @@ import 'swiper/css/navigation'
 
 interface GalleryProps {
     onClose: () => void
-    childName: string
+    personName: string // This can be either the child's name or spouse's name
 }
 
-const Gallery = ({ onClose, childName }: GalleryProps) => {
+const Gallery = ({ onClose, personName }: GalleryProps) => {
     const [open, setOpen] = useState(false)
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
     const [photos, setPhotos] = useState<Photo[]>([])
@@ -38,19 +38,18 @@ const Gallery = ({ onClose, childName }: GalleryProps) => {
     }, [])
 
     const filteredPhotos = useMemo(() => {
-        if (loading || !childName.trim()) return [] // Prevent unnecessary filtering
+        if (loading || !personName.trim()) return [] // Prevent unnecessary filtering
 
-        const matchingPhotos = photos.filter((photo) =>
-            photo.name.toLowerCase().includes(childName.toLowerCase())
+        // Find the exact match for either a child or a spouse
+        const matchingPhotos = photos.filter(
+            (photo) => photo.name.toLowerCase() === personName.toLowerCase()
         )
 
         // Prioritize 'single-photo' type at the first index
-        const sortedPhotos = [...matchingPhotos].sort((a, b) =>
+        return matchingPhotos.sort((a, b) =>
             a.type === 'single-photo' ? -1 : b.type === 'single-photo' ? 1 : 0
         )
-
-        return sortedPhotos
-    }, [photos, childName, loading])
+    }, [photos, personName, loading])
 
     const handleOpen = (image: string) => {
         setSelectedImage(image)

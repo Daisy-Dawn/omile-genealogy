@@ -28,8 +28,8 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
 
                 if (data.data.length > 0) {
                     const familyData = data.data[0]
-                    setMarriedTo(familyData.descendants.marriedTo || [])
-                    setDescendants(familyData.descendants.children || [])
+                    setMarriedTo(familyData?.descendants?.marriedTo || [])
+                    setDescendants(familyData?.descendants?.children || [])
                 }
             } catch (error) {
                 console.error('Error fetching family tree:', error)
@@ -128,7 +128,7 @@ export const FamilyTreeChild = ({
     onFetchSuccess?: () => void
 }) => {
     const [showGallery, setShowGallery] = useState(false)
-    const [selectedChild, setSelectedChild] = useState<string | null>(null)
+    const [selectedPerson, setSelectedPerson] = useState<string | null>(null)
     const [openChild, setOpenChild] = useState<string | null>(null)
     const [childData, setChildData] = useState<{
         [key: string]: {
@@ -236,6 +236,23 @@ export const FamilyTreeChild = ({
                                 <p className="text-[#7B3A12] font-medium text-[13px] md:text-[14px]">
                                     {spouse.name}
                                 </p>
+
+                                <div
+                                    onClick={() => {
+                                        setSelectedPerson(spouse.name)
+                                        setShowGallery(true)
+                                    }}
+                                    className="cursor-pointer"
+                                >
+                                    <Avatar
+                                        sx={{ width: 22, height: 22 }}
+                                        src={
+                                            spouse.picture ||
+                                            'https://www.svgrepo.com/show/23012/profile-user.svg'
+                                        }
+                                        alt={spouse.name}
+                                    />
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -273,17 +290,14 @@ export const FamilyTreeChild = ({
                                             {spouse.name}
                                         </p>
                                         <div
-                                            // onClick={() => {
-                                            //     setSelectedChild(child.name) // Store selected child's name
-                                            //     setShowGallery(true)
-                                            // }}
+                                            onClick={() => {
+                                                setSelectedPerson(spouse.name)
+                                                setShowGallery(true)
+                                            }}
                                             className="cursor-pointer"
                                         >
                                             <Avatar
-                                                sx={{
-                                                    width: 22,
-                                                    height: 22,
-                                                }}
+                                                sx={{ width: 22, height: 22 }}
                                                 src={
                                                     spouse.picture ||
                                                     'https://www.svgrepo.com/show/23012/profile-user.svg'
@@ -383,9 +397,12 @@ export const FamilyTreeChild = ({
                                         </p>
                                         <>
                                             {/* Avatar Click Triggers Gallery */}
+
                                             <div
                                                 onClick={() => {
-                                                    setSelectedChild(child.name) // Store selected child's name
+                                                    setSelectedPerson(
+                                                        child.name
+                                                    ) // Store selected child's name
                                                     setShowGallery(true)
                                                 }}
                                                 className="cursor-pointer"
@@ -402,16 +419,6 @@ export const FamilyTreeChild = ({
                                                     alt={child.name}
                                                 />
                                             </div>
-
-                                            {/* Show Gallery When `showGallery` is True */}
-                                            {showGallery && selectedChild && (
-                                                <Gallery
-                                                    onClose={() =>
-                                                        setShowGallery(false)
-                                                    }
-                                                    childName={selectedChild}
-                                                />
-                                            )}
                                         </>
                                     </div>
 
@@ -468,19 +475,13 @@ export const FamilyTreeChild = ({
                 </div>
             </div>
 
-            {/* {openChild && childData[openChild] && (
-                <div
-                    key={openChild}
-                    className="md:ml-[3rem] ml-[0.7rem]  mt-[1rem]"
-                    ref={nestedChildRef}
-                >
-                    <FamilyTreeChild
-                        marriedTo={childData[openChild].marriedTo}
-                        descendants={childData[openChild].descendants}
-                        onFetchSuccess={onFetchSuccess} // Pass the callback to nested child
-                    />
-                </div>
-            )} */}
+            {/* Show Gallery When `showGallery` is True */}
+            {showGallery && selectedPerson && (
+                <Gallery
+                    onClose={() => setShowGallery(false)}
+                    personName={selectedPerson} // Updated prop name
+                />
+            )}
         </div>
     )
 }
