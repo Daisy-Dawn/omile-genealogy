@@ -14,32 +14,34 @@ export default function FamilyTree() {
     {
       image: "/images/home/2.jpg",
       name: "Joackim Ibeachuzinam Omile (Akulueno)",
-      bio: "The Second Son of Okonkwo Nichie Omile",
+      bio: "The Second Son of Okonkwo Ndichie Omile",
     },
     {
-      image: "/images/home/3rd.jpg",
+      image: "/images/home/3.jpg",
       name: "Benjamin Orakwute (Okpokora)",
-      bio: "The 3rd Son of Okonkwo Nichie Omile",
+      bio: "The 3rd Son of Okonkwo Ndichie Omile",
     },
     {
-      image: "/images/home/e.png",
-      name: "Unknown",
-      bio: "This profile has no available biography",
-    },
-    {
-      image: "/images/home/5th.png",
-      name: "Roselin Udumelue Anyaeche (Nne Omile)",
-      bio: "5th daughter of Okonkwo Nichie Omile",
-    },
-    {
-      image: "/images/home/f.jpg",
-      name: "Unknown",
-      bio: "This profile has no available biography",
+      image: "/images/home/blankprofile.png",
+      name: "Mgbafor Ikeli (Nne Omile)",
+      bio: "The First Daughter and the Fourth Child of Okonkwo Ndichie Omile",
     },
     {
       image: "/images/home/7.png",
+
+      name: "Roselin Udumelue Anyaeche (Nne Omile)",
+      bio: "The 3rd daughter and the sixth child of Okonkwo Ndichie Omile",
+    },
+    {
+      image: "/images/home/blankprofile.png",
+      name: "Ayagha Okafor Egbochue (Nne Omile)",
+      bio: "The Second daughter and the fifth child of Okonkwo Ndichie Omile",
+    },
+    {
+      image: "/images/home/5th.png",
+
       name: "Grace Okuazanwa Akunne (Nne Omile)",
-      bio: "The Last daughter of Okonkwo Nichie Omile",
+      bio: "The Last child of Okonkwo Ndichie Omile",
     },
   ];
 
