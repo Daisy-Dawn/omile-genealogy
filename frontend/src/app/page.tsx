@@ -14,42 +14,40 @@ export default function FamilyTree() {
     {
       image: "/images/home/2.jpg",
       name: "Joackim Ibeachuzinam Omile (Akulueno)",
-      bio: "The Second Son of Okonkwo Ndichie Omile",
+      bio: "The Second Son of Okonkwo Nichie Omile",
     },
     {
-      image: "/images/home/3.jpg",
+      image: "/images/home/3rd.jpg",
       name: "Benjamin Orakwute (Okpokora)",
-      bio: "The 3rd Son of Okonkwo Ndichie Omile",
+      bio: "The 3rd Son of Okonkwo Nichie Omile",
     },
     {
-      image: "/images/home/blankprofile.png",
-      name: "Mgbafor Ikeli (Nne Omile)",
-      bio: "The First Daughter and the Fourth Child of Okonkwo Ndichie Omile",
-    },
-    {
-      image: "/images/home/7.png",
-
-      name: "Roselin Udumelue Anyaeche (Nne Omile)",
-      bio: "The 3rd daughter and the sixth child of Okonkwo Ndichie Omile",
-    },
-    {
-      image: "/images/home/blankprofile.png",
-      name: "Ayagha Okafor Egbochue (Nne Omile)",
-      bio: "The Second daughter and the fifth child of Okonkwo Ndichie Omile",
+      image: "/images/home/e.png",
+      name: "Unknown",
+      bio: "This profile has no available biography",
     },
     {
       image: "/images/home/5th.png",
-
+      name: "Roselin Udumelue Anyaeche (Nne Omile)",
+      bio: "5th daughter of Okonkwo Nichie Omile",
+    },
+    {
+      image: "/images/home/f.jpg",
+      name: "Unknown",
+      bio: "This profile has no available biography",
+    },
+    {
+      image: "/images/home/7.png",
       name: "Grace Okuazanwa Akunne (Nne Omile)",
-      bio: "The Last child of Okonkwo Ndichie Omile",
+      bio: "The Last daughter of Okonkwo Nichie Omile",
     },
   ];
 
   return (
-    <section className="relative flex flex-col items-center">
+    <section className="relative flex flex-col items-center px-4">
       {/* HEADER SECTION */}
       <div className="text-center max-w-2xl mx-auto">
-        <h2 className="font-playfair leading-tight text-brown-gradient-main text-[32px] md:text-[50px] font-medium">
+        <h2 className="font-playfair leading-tight text-brown-gradient-main text-[28px] md:text-[50px] font-medium">
           Tracing Our Roots: The Omile Family Heritage.
         </h2>
         <p className="md:text-[17px] text-[14px] w-[90%] md:w-[80%] mx-auto">
@@ -60,7 +58,7 @@ export default function FamilyTree() {
 
       {/* FAMILY TREE SECTION */}
       <div
-        className="relative w-[600px] h-[600px] mt-6 bg-cover bg-center"
+        className="relative w-full max-w-[600px] aspect-square mt-6 bg-contain bg-center bg-no-repeat"
         style={{ backgroundImage: "url(/images/home/tree.png)" }}
       >
         {/* Profiles with Tooltips */}
@@ -77,7 +75,8 @@ export default function FamilyTree() {
             allowHTML={true}
           >
             <div
-              className="absolute w-20 h-20 border-4 border-white-400 rounded-full overflow-hidden cursor-pointer transition-transform transform hover:scale-110"
+              className="absolute border-4 border-white rounded-full overflow-hidden cursor-pointer transition-transform transform hover:scale-110 
+              flex items-start w-10 h-10 md:w-20 md:h-20" // Ensuring proper fitting
               style={getProfilePosition(index)}
             >
               <Image
@@ -85,7 +84,7 @@ export default function FamilyTree() {
                 alt={profile.name}
                 width={80}
                 height={80}
-                objectFit="cover"
+                className="w-full h-full object-cover object-top rounded-full" // Fixes cropping issue
               />
             </div>
           </Tippy>
@@ -98,13 +97,13 @@ export default function FamilyTree() {
 // Function to set profile positions
 function getProfilePosition(index: number) {
   const positions = [
-    { top: "50px", left: "250px" },
-    { top: "150px", left: "100px" },
-    { top: "150px", left: "400px" },
-    { top: "250px", left: "50px" },
-    { top: "250px", left: "500px" },
-    { top: "350px", left: "150px" },
-    { top: "350px", left: "400px" },
+    { top: "10%", left: "45%" },
+    { top: "25%", left: "20%" },
+    { top: "25%", left: "70%" },
+    { top: "40%", left: "10%" },
+    { top: "40%", left: "80%" },
+    { top: "60%", left: "30%" },
+    { top: "60%", left: "65%" },
   ];
   return positions[index] || {};
 }
