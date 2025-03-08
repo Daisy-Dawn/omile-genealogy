@@ -17,7 +17,7 @@ export default function FamilyTree() {
       bio: "The Second Son of Okonkwo Ndichie Omile",
     },
     {
-      image: "/images/home/3.jpg",
+      image: "/images/home/3rd.jpg",
       name: "Benjamin Orakwute (Okpokora)",
       bio: "The 3rd Son of Okonkwo Ndichie Omile",
     },
