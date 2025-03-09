@@ -146,18 +146,11 @@ const Photos = () => {
         }
     }
 
-    // if (!photos.length)
-    //     return (
-    //         <div className="min-h-[50vh] flex justify-center items-center">
-    //             <CircularProgress size={27} color="secondary" />
-    //         </div>
-    //     )
-
     return (
         <section className="min-h-screen mb-[2rem]">
             {/* HEADER SECTION */}
             <div className="flex justify-center mx-[1rem] lg:mx-0">
-                <div className="xl:w-1/2 lg:w-2/3 w-full flex flex-col items-center gap-2">
+                <div className="xl:w-2/3 lg:w-2/3 w-full flex flex-col items-center gap-2">
                     <h2 className="font-playfair leading-tight text-brown-gradient-main text-[32px] md:text-[50px] text-center font-medium">
                         Family photo Gallery
                     </h2>
@@ -191,14 +184,24 @@ const Photos = () => {
                         ))}
                     </div>
 
-                    <div className="rounded-[16px] mt-[1.5rem] border-[2px] border-appBrown2 md:px-[2rem] px-[1rem] md:py-3 py-2 w-full flex gap-2">
-                        <LuSearch size={22} className="text-appBrown2" />
-                        <input
-                            value={searchTerm}
-                            onChange={handleSearch}
-                            placeholder="Search"
-                            className="w-full bg-transparent text-appBrown2 outline-none placeholder:text-appBrown2"
-                        />
+                    <div className="flex w-full items-center gap-3">
+                        {/* upload a photo button */}
+                        <button
+                            onClick={toggleDrawer(true)}
+                            className={`md:rounded-[12px] rounded-[12px] button-home text-white mt-[1rem] md:text-[15px] text-[11px] sm:text-[13px] md:px-3 px-0 md:py-3 py-2 w-[100px] md:min-w-[150px] flex justify-center items-center`}
+                        >
+                            Upload a photo
+                        </button>
+
+                        <div className="rounded-[16px] mt-[1.5rem] border-[2px] border-appBrown2 md:px-[2rem] px-[1rem] md:py-3 py-2 w-full flex gap-2">
+                            <LuSearch size={22} className="text-appBrown2" />
+                            <input
+                                value={searchTerm}
+                                onChange={handleSearch}
+                                placeholder="Search"
+                                className="w-full bg-transparent text-appBrown2 outline-none placeholder:text-appBrown2"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -354,16 +357,6 @@ const Photos = () => {
                                 </p>
                             </div>
                         )}
-                    </div>
-
-                    {/* upload a photo button */}
-                    <div className="my-[1.5rem] w-full flex justify-center items-center">
-                        <button
-                            onClick={toggleDrawer(true)}
-                            className={`md:rounded-[12px] rounded-[12px] button-home text-white mt-[1rem] md:text-[15px] text-[11px] sm:text-[13px] md:px-3 px-0 md:py-3 py-2 w-[100px] md:min-w-[150px] flex justify-center items-center`}
-                        >
-                            Upload a photo
-                        </button>
                     </div>
 
                     {/* Upload Photo Drawer */}
