@@ -40,17 +40,20 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
     const filteredPhotos = useMemo(() => {
         if (loading || !personName.trim()) return [] // Prevent unnecessary filtering
 
-        // Normalize the search name (convert to lowercase for case-insensitive matching)
-        const normalizedPersonName = personName.toLowerCase().trim()
+        // Normalize function: Convert to lowercase, trim, and preserve hyphens
+        const normalizeName = (name: string) =>
+            name.toLowerCase().trim().replace(/\s+/g, ' ') // Normalize spaces but keep hyphens
+
+        const normalizedPersonName = normalizeName(personName) // Normalize search name
 
         const matchingPhotos = photos.filter((photo) => {
-            // Extract individual names before commas
+            // Split by both colon (:) and comma (,) to separate family name and individual names
             const nameGroups = photo.name
                 .toLowerCase()
-                .split(/\s*,\s*/) // Split by commas
-                .map((name) => name.trim()) // Trim extra spaces
+                .split(/\s*[:|,]\s*/) // Split by `:` or `,`
+                .map((name) => normalizeName(name)) // Normalize each name
 
-            // Check if the exact personName exists in the list
+            // Check if the personName matches any of the names (including the family label)
             return nameGroups.includes(normalizedPersonName)
         })
 
