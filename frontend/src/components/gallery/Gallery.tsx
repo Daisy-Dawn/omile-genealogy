@@ -40,10 +40,19 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
     const filteredPhotos = useMemo(() => {
         if (loading || !personName.trim()) return [] // Prevent unnecessary filtering
 
-        // Find the exact match for either a child or a spouse
-        const matchingPhotos = photos.filter(
-            (photo) => photo.name.toLowerCase() === personName.toLowerCase()
-        )
+        // Normalize the search name (convert to lowercase for case-insensitive matching)
+        const normalizedPersonName = personName.toLowerCase().trim()
+
+        const matchingPhotos = photos.filter((photo) => {
+            // Extract individual names before commas
+            const nameGroups = photo.name
+                .toLowerCase()
+                .split(/\s*,\s*/) // Split by commas
+                .map((name) => name.trim()) // Trim extra spaces
+
+            // Check if the exact personName exists in the list
+            return nameGroups.includes(normalizedPersonName)
+        })
 
         // Prioritize 'single-photo' type at the first index
         return matchingPhotos.sort((a, b) =>
@@ -66,7 +75,7 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-[#24202014]">
             <div
-                className="bg-white h-[400px] min-w-[700px] p-4 rounded-lg shadow-lg relative"
+                className="bg-white h-[400px] w-[700px] p-4 rounded-lg shadow-lg relative"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
