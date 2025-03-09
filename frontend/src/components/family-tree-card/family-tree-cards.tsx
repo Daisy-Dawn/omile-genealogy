@@ -16,6 +16,35 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
     >([])
     const [descendants, setDescendants] = useState<{ name: string }[]>([])
     const [loading, setLoading] = useState(true)
+    const [selectedPerson, setSelectedPerson] = useState<string | null>(null)
+    const [showGallery, setShowGallery] = useState(false)
+    const [profilePicture, setProfilePicture] = useState('')
+
+    // useEffect(() => {
+    //     const fetchFamilyTree = async () => {
+    //         if (!name) return
+
+    //         try {
+    //             const encodedName = encodeURIComponent(name)
+    //             const response = await fetch(
+    //                 `${process.env.NEXT_PUBLIC_API_URL}/family?name=${encodedName}`
+    //             )
+    //             const data = await response.json()
+
+    //             if (data.data.length > 0) {
+    //                 const familyData = data.data[0]
+    //                 setMarriedTo(familyData?.descendants?.marriedTo || [])
+    //                 setDescendants(familyData?.descendants?.children || [])
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching family tree:', error)
+    //         } finally {
+    //             setLoading(false)
+    //         }
+    //     }
+
+    //     fetchFamilyTree()
+    // }, [name])
 
     useEffect(() => {
         const fetchFamilyTree = async () => {
@@ -30,8 +59,36 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
 
                 if (data.data.length > 0) {
                     const familyData = data.data[0]
+
                     setMarriedTo(familyData?.descendants?.marriedTo || [])
                     setDescendants(familyData?.descendants?.children || [])
+
+                    // Check if the main document matches the name
+                    if (
+                        familyData.name?.toLowerCase().trim() ===
+                        name.toLowerCase().trim()
+                    ) {
+                        setProfilePicture(
+                            familyData.picture || defaultProfilePic
+                        )
+                        return
+                    }
+
+                    // Search within children and marriedTo
+                    const allDescendants = [
+                        ...(familyData?.descendants?.children || []),
+                        ...(familyData?.descendants?.marriedTo || []),
+                    ]
+
+                    const matchedPerson = allDescendants.find(
+                        (person) =>
+                            person.name?.toLowerCase().trim() ===
+                            name.toLowerCase().trim()
+                    )
+
+                    setProfilePicture(
+                        matchedPerson?.picture || defaultProfilePic
+                    )
                 }
             } catch (error) {
                 console.error('Error fetching family tree:', error)
@@ -42,6 +99,10 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
 
         fetchFamilyTree()
     }, [name])
+
+    // Default profile image if no picture is found
+    const defaultProfilePic =
+        'https://www.svgrepo.com/show/23012/profile-user.svg'
 
     const openBar = () => setCollapseBar(!collapseBar)
 
@@ -70,6 +131,20 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
                         <h2 className="text-[#7B3A12] text-[13px] lg:text-[15px]">
                             Tree of {name} Family
                         </h2>
+
+                        <div
+                            onClick={() => {
+                                setSelectedPerson(name)
+                                setShowGallery(true)
+                            }}
+                            className="cursor-pointer"
+                        >
+                            <Avatar
+                                sx={{ width: 22, height: 22 }}
+                                src={profilePicture}
+                                alt={name}
+                            />
+                        </div>
                     </div>
 
                     <button className="md:mr-[2rem] mr-3">
@@ -101,11 +176,18 @@ export const FamilyTreeParent = ({ name }: { name: string }) => {
                                 marriedTo={marriedTo}
                                 descendants={descendants}
                                 isFirstChild
-                                // onFetchSuccess={handleFetchSuccess} // Pass the callback
                             />
                         )}
                     </div>
                 </div>
+            )}
+
+            {/* Show Gallery When `showGallery` is True */}
+            {showGallery && selectedPerson && (
+                <Gallery
+                    onClose={() => setShowGallery(false)}
+                    personName={selectedPerson} // Updated prop name
+                />
             )}
         </div>
     )
@@ -158,9 +240,6 @@ export const FamilyTreeChild = ({
                             descendants: familyData.descendants.children || [],
                         },
                     }))
-
-                    // Notify the parent about successful fetch
-                    // onFetchSuccess() // Trigger the parent's callback function
                 }
                 setLoading((prev) => ({ ...prev, [childName]: false }))
             } catch (error) {
