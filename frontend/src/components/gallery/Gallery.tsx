@@ -81,7 +81,7 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-[#24202014]">
             <div
-                className="bg-white h-[400px] w-[700px] p-4 rounded-lg shadow-lg relative overflow-y-auto max-h-[90vh]"
+                className="bg-white h-[400px] w-[700px] p-4 rounded-lg shadow-lg relative"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button

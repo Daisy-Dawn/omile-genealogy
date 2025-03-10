@@ -300,7 +300,7 @@ const Photos = () => {
                                             {filteredPhotos.map((photo) => (
                                                 <SwiperSlide key={photo._id}>
                                                     <div
-                                                        className="rounded-[14px] shadow-xl bg-[#FDEBDD] overflow-hidden cursor-pointer"
+                                                        className="rounded-[14px] h-[360px] z-50 shadow-xl bg-[#FDEBDD] overflow-hidden cursor-pointer"
                                                         onClick={() =>
                                                             setSelectedPhoto(
                                                                 photo
@@ -321,7 +321,13 @@ const Photos = () => {
                                                         </div>
                                                         <div className="py-2 px-[1rem]">
                                                             <p className="text-appBrown2 text-[14px] capitalize font-medium">
-                                                                {photo.name}
+                                                                {photo.name
+                                                                    .length > 50
+                                                                    ? `${photo.name.substring(
+                                                                          0,
+                                                                          50
+                                                                      )}...`
+                                                                    : photo.name}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -385,7 +391,7 @@ const Photos = () => {
                                     className="flex flex-col h-full"
                                 >
                                     <div
-                                        className="rounded-[14px] shadow-xl bg-[#FDEBDD] overflow-hidden cursor-pointer"
+                                        className="rounded-[14px] h-[370px] 2xl:h-[360px] shadow-xl bg-[#FDEBDD] overflow-hidden cursor-pointer"
                                         onClick={() => setSelectedPhoto(photo)}
                                     >
                                         <div className="md:h-[300px] lg:h-[280px] xl:h-[300px] h-[200px] w-full">
@@ -402,7 +408,12 @@ const Photos = () => {
                                         </div>
                                         <div className="py-2 px-[1rem]">
                                             <p className="text-appBrown2 text-[14px] capitalize font-medium">
-                                                {photo.name}
+                                                {photo.name.length > 57
+                                                    ? `${photo.name.substring(
+                                                          0,
+                                                          57
+                                                      )}...`
+                                                    : photo.name}
                                             </p>
                                         </div>
                                     </div>
