@@ -10,7 +10,8 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import axios from 'axios'
 import UploadPhotoDrawer from '@/components/utils/DrawerComp'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, Tooltip } from '@mui/material'
+import { PiHandArrowDownFill } from 'react-icons/pi'
 
 export type Photo = {
     _id: string
@@ -33,6 +34,7 @@ const Photos = () => {
     const [value, setValue] = useState('historical')
 
     const [isHovered, setIsHovered] = useState(false)
+    const [showPhotos, setShowPhotos] = useState(false)
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
@@ -235,7 +237,7 @@ const Photos = () => {
                                     onMouseLeave={() => setIsHovered(false)}
                                 >
                                     {/* Large Image */}
-                                    <div className="md:h-[400px] h-[350px] w-full relative">
+                                    <div className="md:h-[450px] h-[350px] w-full relative">
                                         <Image
                                             width={400}
                                             height={400}
@@ -244,7 +246,7 @@ const Photos = () => {
                                                 selectedPhoto?.name ||
                                                 'Large photo'
                                             }
-                                            className="w-full h-full object-cover object-top"
+                                            className="w-full h-full object-cover object-top "
                                         />
 
                                         {/* Hover Overlay */}
@@ -314,11 +316,11 @@ const Photos = () => {
                                                                     '/placeholder.svg'
                                                                 }
                                                                 alt={photo.name}
-                                                                className="w-full h-full object-cover"
+                                                                className="w-full h-full object-top object-cover"
                                                             />
                                                         </div>
                                                         <div className="py-2 px-[1rem]">
-                                                            <p className="text-appBrown2 capitalize font-medium">
+                                                            <p className="text-appBrown2 text-[14px] capitalize font-medium">
                                                                 {photo.name}
                                                             </p>
                                                         </div>
@@ -328,25 +330,41 @@ const Photos = () => {
                                         </Swiper>
                                     </div>
 
-                                    {/* Scroll Buttons */}
-                                    <div className="w-full gap-3 flex flex-col justify-center items-center mt-4">
-                                        <div className="rounded-[33px] w-[150px] bg-[#FDEBDD] border-[1px] border-appBrown2 px-[0.7rem] py-[0.5rem] flex justify-between items-center">
-                                            <button className="custom-prev">
-                                                <IoIosArrowRoundBack
-                                                    size={19}
-                                                    className="text-appBrown"
-                                                />
-                                            </button>
-                                            <button className="custom-next">
-                                                <IoIosArrowRoundForward
-                                                    size={19}
-                                                    className="text-appBrown"
-                                                />
-                                            </button>
+                                    <div className="w-full gap-3 flex justify-center items-center mt-4">
+                                        {/* Scroll Buttons */}
+                                        <div className="w-[80%] gap-3 flex flex-col justify-center items-center ">
+                                            <div className="rounded-[33px] w-[150px] bg-[#FDEBDD] border-[1px] border-appBrown2 px-[0.7rem] py-[0.5rem] flex justify-between items-center">
+                                                <button className="custom-prev">
+                                                    <IoIosArrowRoundBack
+                                                        size={19}
+                                                        className="text-appBrown"
+                                                    />
+                                                </button>
+                                                <button className="custom-next">
+                                                    <IoIosArrowRoundForward
+                                                        size={19}
+                                                        className="text-appBrown"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <p className="text-appBrown2 font-medium">
+                                                Scroll to explore
+                                            </p>
                                         </div>
-                                        <p className="text-appBrown2 font-medium">
-                                            Scroll to explore
-                                        </p>
+
+                                        <Tooltip title="View all Photos">
+                                            <button
+                                                onClick={() =>
+                                                    setShowPhotos(!showPhotos)
+                                                }
+                                                className=""
+                                            >
+                                                <PiHandArrowDownFill
+                                                    className="text-appBrown2"
+                                                    size={24}
+                                                />
+                                            </button>
+                                        </Tooltip>
                                     </div>
                                 </div>
                             </>
@@ -358,6 +376,40 @@ const Photos = () => {
                             </div>
                         )}
                     </div>
+
+                    {showPhotos && (
+                        <div className="grid px-[1rem] lg:px-[3rem] grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {filteredPhotos.map((photo) => (
+                                <div
+                                    key={photo._id}
+                                    className="flex flex-col h-full"
+                                >
+                                    <div
+                                        className="rounded-[14px] shadow-xl bg-[#FDEBDD] overflow-hidden cursor-pointer"
+                                        onClick={() => setSelectedPhoto(photo)}
+                                    >
+                                        <div className="md:h-[300px] lg:h-[280px] xl:h-[300px] h-[200px] w-full">
+                                            <Image
+                                                width={300}
+                                                height={300}
+                                                src={
+                                                    photo.photourl ||
+                                                    '/placeholder.svg'
+                                                }
+                                                alt={photo.name}
+                                                className="w-full h-full object-top object-cover"
+                                            />
+                                        </div>
+                                        <div className="py-2 px-[1rem]">
+                                            <p className="text-appBrown2 text-[14px] capitalize font-medium">
+                                                {photo.name}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Upload Photo Drawer */}
                     <UploadPhotoDrawer

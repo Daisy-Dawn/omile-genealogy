@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 import Image from 'next/image'
 import { Modal, Box } from '@mui/material'
 import { Photo } from '@/app/photos/page'
@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 
 interface GalleryProps {
     onClose: () => void
@@ -19,6 +20,8 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
     const [photos, setPhotos] = useState<Photo[]>([])
     const [loading, setLoading] = useState(true)
+
+    const swiperRef = useRef<any>(null)
 
     useEffect(() => {
         const fetchPhotos = async () => {
@@ -78,7 +81,7 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-[#24202014]">
             <div
-                className="bg-white h-[400px] w-[700px] p-4 rounded-lg shadow-lg relative"
+                className="bg-white h-[400px] w-[700px] p-4 rounded-lg shadow-lg relative overflow-y-auto max-h-[90vh]"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
@@ -89,33 +92,55 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
                 </button>
 
                 {filteredPhotos.length > 0 ? (
-                    <Swiper
-                        modules={[Navigation]}
-                        navigation
-                        spaceBetween={10}
-                        slidesPerView={3} // Show 3 images at a time
-                        className="mt-[2.5rem] h-[300px] w-full"
-                    >
-                        {filteredPhotos.map((photo) => (
-                            <SwiperSlide
-                                key={photo._id}
-                                className="h-[300px] w-full"
-                            >
-                                <div className="h-full w-full overflow-hidden">
-                                    <Image
-                                        src={photo.photourl}
-                                        alt={photo.name}
-                                        width={300}
-                                        height={300}
-                                        className="cursor-pointer object-cover h-full w-full rounded-lg"
-                                        onClick={() =>
-                                            handleOpen(photo.photourl)
-                                        }
-                                    />
-                                </div>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+                    <div className="relative">
+                        {/* Swiper Component */}
+                        <Swiper
+                            ref={swiperRef}
+                            modules={[Navigation]}
+                            spaceBetween={10}
+                            slidesPerView={3} // Show 3 images at a time
+                            className="mt-[2.5rem] h-[300px] w-full"
+                        >
+                            {filteredPhotos.map((photo) => (
+                                <SwiperSlide
+                                    key={photo._id}
+                                    className="h-[300px] w-full"
+                                >
+                                    <div className="h-full w-full overflow-hidden">
+                                        <Image
+                                            src={photo.photourl}
+                                            alt={photo.name}
+                                            width={300}
+                                            height={300}
+                                            className="cursor-pointer object-cover h-full w-full rounded-lg"
+                                            onClick={() =>
+                                                handleOpen(photo.photourl)
+                                            }
+                                        />
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+
+                        {/* Custom Navigation Arrows */}
+                        <button
+                            onClick={() =>
+                                swiperRef.current?.swiper?.slidePrev()
+                            }
+                            className="absolute top-1/2 left-[-10px] z-50 transform -translate-y-1/2 bg-black text-white p-2 rounded-full shadow-md"
+                        >
+                            <FaChevronLeft size={20} />
+                        </button>
+
+                        <button
+                            onClick={() =>
+                                swiperRef.current?.swiper?.slideNext()
+                            }
+                            className="absolute top-1/2 right-[-10px] z-50 transform -translate-y-1/2 bg-black text-white p-2 rounded-full shadow-md"
+                        >
+                            <FaChevronRight size={20} />
+                        </button>
+                    </div>
                 ) : (
                     <p className="text-center text-gray-500 mt-20">
                         No matching photos found.
