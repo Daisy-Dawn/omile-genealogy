@@ -39,20 +39,21 @@ const About = () => {
                 </div>
             </div>
 
-            <div className="flex justify-center mt-[3rem] md:mt-7">
-                <div className="hidden md:block">
+            <div className="flex justify-center mt-[3rem] md:mt-[3rem]">
+                <div className="hidden w-[80%] h-[500px] md:block">
                     <Image
                         width={1000}
                         height={1000}
-                        src="/images/about/Frame 77.png"
+                        className="w-full h-full object-cover"
+                        src="/images/about/omile.jpg"
                         alt="about "
                     />
                 </div>
-                <div className="md:hidden">
+                <div className="md:hidden w-full h-full">
                     <Image
                         width={1000}
                         height={1000}
-                        src="/images/about/Frame 771.png"
+                        src="/images/about/omile.jpg"
                         alt="about "
                     />
                 </div>

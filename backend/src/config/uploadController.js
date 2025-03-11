@@ -269,38 +269,6 @@ const uploadPhoto = async (req, res) => {
                 updateQuery.picture = imageUrl
             }
 
-            // Update picture in nested fields including marriedto
-            // await Person.updateOne(
-            //     { _id: person._id },
-            //     {
-            //         $set: {
-            //             ...updateQuery,
-            //             'descendants.marriedTo.$[spouse].picture': imageUrl,
-            //             'descendants.children.$[child].picture': imageUrl,
-            //             'descendants.grandchildren.$[grandchild].picture':
-            //                 imageUrl,
-            //         },
-            //     },
-            //     {
-            //         arrayFilters: [
-            //             {
-            //                 'spouse.name': {
-            //                     $regex: new RegExp(`^${escapedName}$`, 'i'),
-            //                 },
-            //             },
-            //             {
-            //                 'child.name': {
-            //                     $regex: new RegExp(`^${escapedName}$`, 'i'),
-            //                 },
-            //             },
-            //             {
-            //                 'grandchild.name': {
-            //                     $regex: new RegExp(`^${escapedName}$`, 'i'),
-            //                 },
-            //             },
-            //         ],
-            //     }
-            // )
             await Person.updateMany(
                 { name: { $regex: new RegExp(`^${escapedName}$`, 'i') } },
                 { $set: { picture: imageUrl } }

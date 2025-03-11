@@ -48,53 +48,6 @@ const UploadPhotoDrawer: React.FC<UploadPhotoDrawerProps> = ({
 
     const [loading, setLoading] = useState(false)
 
-    // useEffect(() => {
-    //     const fetchFamilyMembers = async () => {
-    //         try {
-    //             const response = await axios.get<ApiResponse>(
-    //                 `${process.env.NEXT_PUBLIC_API_URL}/family`
-    //             )
-    //             const members = response.data.data
-
-    //             const uniqueNames = new Set<string>()
-
-    //             members.forEach((member) => {
-    //                 uniqueNames.add(member.name.trim().toLowerCase())
-
-    //                 member.descendants.children?.forEach((child) =>
-    //                     uniqueNames.add(child.name.trim().toLowerCase())
-    //                 )
-    //                 member.descendants.grandchildren?.forEach((grandchild) =>
-    //                     uniqueNames.add(grandchild.name.trim().toLowerCase())
-    //                 )
-    //                 member.descendants.greatgrandchildren?.forEach(
-    //                     (greatGrandchild) =>
-    //                         uniqueNames.add(
-    //                             greatGrandchild.name.trim().toLowerCase()
-    //                         )
-    //                 )
-    //             })
-
-    //             // Convert back to original case format by mapping from original data
-    //             const normalizedNames = Array.from(uniqueNames).map(
-    //                 (lowerName) => {
-    //                     const foundMember = members.find(
-    //                         (member) =>
-    //                             member.name.trim().toLowerCase() === lowerName
-    //                     )
-    //                     return foundMember ? foundMember.name.trim() : lowerName
-    //                 }
-    //             )
-
-    //             setFamilyMembers(normalizedNames)
-    //         } catch (error) {
-    //             console.error('Error fetching family members:', error)
-    //         }
-    //     }
-
-    //     fetchFamilyMembers()
-    // }, [])
-
     useEffect(() => {
         const fetchFamilyMembers = async () => {
             try {

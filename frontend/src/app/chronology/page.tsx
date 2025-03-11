@@ -16,7 +16,7 @@ const Chronology = () => {
 
     const parentNames = [
         'Muo Ndichie Omile (Nnaebue)', // Generation 1
-        'Joackim Ibeachuzinam Omile (Akulueuno)', // Generation 2
+        'Joachim Ibeachuzinam Omile (Akulueuno)', // Generation 2
         'Benjamin Orakwute Omile (Okpokora)', // Generation 3
         'Mgbafor Ikeli (Nee Omile)', // Generation 4
         'Ayagha Okafor Egbochue (Nee Omile)', // Generation 5

@@ -58,7 +58,7 @@ const GenealogyTree = () => {
               // value={searchTerm}
               // onChange={handleSearchInput}
               // onKeyDown={handleKeyPress} // Trigger search on Enter
-              placeholder="Search family members"
+              placeholder="Click on Family members to Find Decendants"
               className="w-full bg-transparent text-appBrown2 outline-none placeholder:text-appBrown"
             />
           </div>
