@@ -44,7 +44,7 @@ body::after {
   content: "";
   position: fixed;
   top: 0;
-  width: 20%; /* Adjust width as needed for the side images */
+  width: 10%; /* Adjust width as needed for the side images */
   height: 41%; /* Stretch to full height */
   background-size: contain;
   background-repeat: no-repeat;

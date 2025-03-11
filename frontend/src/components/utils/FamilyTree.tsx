@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-'use client'
+"use client";
 // import type React from 'react'
 // import { useState, useEffect } from 'react'
 // import { FamilyMember, sampleFamilyData } from '../db/familytreedata'
@@ -203,80 +203,82 @@
 
 // export default TreeNode
 
-import React, { useEffect, useRef } from 'react'
-import * as d3 from 'd3'
-import { sampleFamilyData } from '../db/familytreedata'
+import React, { useEffect, useRef } from "react";
+import * as d3 from "d3";
+import { sampleFamilyData } from "../db/familytreedata";
 
 // D3 Tree Component
 const FamilyTreeD3: React.FC = () => {
-    const svgRef = useRef<SVGSVGElement | null>(null)
+  const svgRef = useRef<SVGSVGElement | null>(null);
 
-    useEffect(() => {
-        if (!svgRef.current) return
+  useEffect(() => {
+    if (!svgRef.current) return;
 
-        // Clear previous SVG contents
-        d3.select(svgRef.current).selectAll('*').remove()
+    // Clear previous SVG contents
+    d3.select(svgRef.current).selectAll("*").remove();
 
-        // Set up full-screen dimensions
-        const width = 14500
-        const height = window.innerHeight
-        const margin = { top: 20, right: 30, bottom: 30, left: 30 }
+    // Set up full-screen dimensions
+    const width = 14500;
+    const height = window.innerHeight;
+    const margin = { top: 20, right: 30, bottom: 30, left: 30 };
 
-        // Create an SVG container
-        const svg = d3
-            .select(svgRef.current)
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    // Create an SVG container
+    const svg = d3
+      .select(svgRef.current)
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-        // Create the tree layout
-        const tree = d3.tree().size([width - 200, height - 200])
+    // Create the tree layout
+    const tree = d3.tree().size([width - 200, height - 200]);
 
-        // Convert data to D3 hierarchy
-        const root = d3.hierarchy(sampleFamilyData)
+    // Convert data to D3 hierarchy
+    const root = d3.hierarchy(sampleFamilyData);
 
-        // Generate tree structure
-        tree(root)
+    // Generate tree structure
+    tree(root);
 
-        // Create links (Behind the nodes)
-        svg.selectAll('path.link')
-            .data(root.links())
-            .enter()
-            .append('path')
-            .attr('class', 'link')
-            .attr(
-                'd',
-                (d) => `M${d.source.x},${d.source.y + 25}  
+    // Create links (Behind the nodes)
+    svg
+      .selectAll("path.link")
+      .data(root.links())
+      .enter()
+      .append("path")
+      .attr("class", "link")
+      .attr(
+        "d",
+        (d) => `M${d.source.x},${d.source.y + 25}  
                   C${d.source.x},${(d.source.y + d.target.y + 50) / 2}  
                   ${d.target.x},${(d.source.y + d.target.y + 50) / 2}  
                   ${d.target.x},${d.target.y}`
-            )
-            .attr('fill', 'none')
-            .attr('stroke', '#83410F')
-            .attr('stroke-width', '1px')
+      )
+      .attr("fill", "none")
+      .attr("stroke", "#83410F")
+      .attr("stroke-width", "1px");
 
-        // Create nodes
-        const node = svg
-            .selectAll('g.node')
-            .data(root.descendants())
-            .enter()
-            .append('g')
-            .attr('class', 'node')
-            .attr('transform', (d) => `translate(${d.x},${d.y})`)
+    // Create nodes
+    const node = svg
+      .selectAll("g.node")
+      .data(root.descendants())
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      .attr("transform", (d) => `translate(${d.x},${d.y})`);
 
-        // Append foreignObject to allow HTML elements inside SVG
-        node.append('foreignObject')
-            .attr('x', -20) // Adjust centering
-            .attr('y', -20)
-            .attr('width', 40) // Match the div size
-            .attr('height', 40)
-            .html(
-                (d) => `
+    // Append foreignObject to allow HTML elements inside SVG
+    node
+      .append("foreignObject")
+      .attr("x", -20) // Adjust centering
+      .attr("y", -20)
+      .attr("width", 40) // Match the div size
+      .attr("height", 40)
+      .html(
+        (d) => `
               <div style="
                   width: 30px; height: 30px;
                   border-radius: 50%;
-                  border: 1px solid ${d.data.color || '#8D6A4A'};
+                  border: 1px solid ${d.data.color || "#8D6A4A"};
                   overflow: hidden;
                   background-color: #8D6A4A;
                   display: flex;
@@ -284,28 +286,30 @@ const FamilyTreeD3: React.FC = () => {
                   align-items: center;
               ">
                   <img src="${
-                      d.data.image ||
-                      'https://res.cloudinary.com/di3p64c4o/image/upload/v1737589601/omile-genealogy/Mrs_Evan_Mr_Mike_Mrs_adora_Mr_chika_Mrs_ukamaka_Mr_Benjamin_Mr_Chukwuma_nsxo51.jpg'
+                    d.data.image ||
+                    "https://res.cloudinary.com/di3p64c4o/image/upload/v1737589601/omile-genealogy/Mrs_Evan_Mr_Mike_Mrs_adora_Mr_chika_Mrs_ukamaka_Mr_Benjamin_Mr_Chukwuma_nsxo51.jpg"
                   }"
                       style="width: 100%; height: 100%; object-fit: cover;"/>
               </div>
           `
-            )
+      );
 
-        // Append text below each node
-        node.append('text')
-            .attr('y', 20) // Adjust to fit under the node
-            .attr('text-anchor', 'middle')
-            .attr('font-size', '7px')
-            .attr('fill', '#83410F')
-            .text((d) => d.data.name)
-    }, [])
+    // Append text below each node
+    node
+      .append("text")
+      .attr("y", 20) // Adjust to fit under the node
+      .attr("text-anchor", "middle")
+      .attr("font-size", "7px")
+      .attr("fill", "#83410F")
+      .text((d) => d.data.name);
+  }, []);
 
-    return (
-        <div style={{ minWidth: '100vw', minHeight: '100vh' }}>
-            <svg ref={svgRef}></svg>
-        </div>
-    )
-}
+  return (
+    <div style={{ minWidth: "100vw", minHeight: "100vh" }}>
+      <svg ref={svgRef}></svg>
+      hello world
+    </div>
+  );
+};
 
-export default FamilyTreeD3
+export default FamilyTreeD3;
