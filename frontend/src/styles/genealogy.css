@@ -133,11 +133,12 @@
 }
 
 h3 {
-  font-size: 15px;
+  font-size: 11px;
+  font-weight: bolder;
 }
 
-.centered-node {
-  display: flex;
+/* center that nigga okonkwo */
+.center-main .genealogy-tree ul {
   justify-content: center;
-  width: 100%;
+  align-items: center;
 }
