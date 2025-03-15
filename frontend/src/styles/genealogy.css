@@ -137,8 +137,14 @@ h3 {
   font-weight: bolder;
 }
 
-/* center that nigga okonkwo */
-.center-main .genealogy-tree ul {
-  justify-content: center;
-  align-items: center;
+/* Center that Nigga Okonkwo Ndichie */
+.genealogy-tree {
+  display: flex;
+  justify-content: center; /* Default: Center when all nodes are collapsed */
+  transition: all 0.3s ease-in-out;
+}
+
+/* If ANY node is expanded, remove centering */
+.genealogy-tree:has(.active) {
+  justify-content: flex-start; /* Aligns left when expanded */
 }
