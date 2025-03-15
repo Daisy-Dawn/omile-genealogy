@@ -149,7 +149,7 @@ const GenealogyTree = () => {
         {loading ? (
           <p className="text-center text-gray-500 padding-top">
             <br />
-            Loading Family Tree{" "}
+            🌳 Please wait hile i fetch Family Tree Data{" "}
             <CircularProgress size={22} color="success"></CircularProgress>
           </p>
         ) : (
