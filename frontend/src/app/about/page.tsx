@@ -6,15 +6,15 @@ const About = () => {
         <section className="min-h-screen">
             {/* HEADER SECTION */}
             <div className="flex justify-center">
-                <div className="lg:w-1/2 px-[1.5rem] w-full flex flex-col items-center gap-2">
+                <div className="lg:w-[60%] px-[1.5rem] w-full flex flex-col items-center gap-2">
                     {/* header */}
                     <h2 className="font-playfair leading-tight text-brown-gradient-main text-[32px] md:text-[50px] text-center font-medium">
                         Genealogy of Omile Family
                     </h2>
 
-                    <div className="grid mt-[1rem] md:grid-cols-2 grid-cols-1 gap-[1.5rem] md:gap-3">
+                    <div className="mt-[1rem] font-medium">
                         <div>
-                            <p className="md:text-[14px] text-appBrown2 text-[12px] ">
+                            <p className="md:text-[14px] md:text-center md:mx-[2rem] text-appBrown2 text-[12px] ">
                                 Nimo, situated in Nikoka Local Government Area
                                 of Anambra State, comprises four quarters:
                                 Ifitenu, Ifiteani, Etiti Nimo, and Egbengwu
@@ -24,7 +24,7 @@ const About = () => {
                             </p>
                         </div>
                         <div>
-                            <p className="md:text-[14px] mt-0 md:mt-[5rem] text-appBrown2 text-[12px] ">
+                            <p className="md:text-[14px] md:text-center  mt-[2rem] text-appBrown2 text-[12px] ">
                                 Through generations of marriages and births, the
                                 family expanded significantly, with notable
                                 branches including the Omile family, descended
@@ -39,13 +39,13 @@ const About = () => {
                 </div>
             </div>
 
-            <div className="flex justify-center mt-[3rem] md:mt-[3rem]">
-                <div className="hidden w-[80%] h-[500px] md:block">
+            <div className="flex justify-center mx-[1.5rem] md:mx-0 my-[3rem] md:mt-[3rem]">
+                <div className="hidden w-[956px] h-[572px] md:block">
                     <Image
                         width={1000}
                         height={1000}
                         className="w-full h-full object-cover"
-                        src="/images/about/omile.jpg"
+                        src="/images/about/about-main.png"
                         alt="about "
                     />
                 </div>
@@ -53,7 +53,7 @@ const About = () => {
                     <Image
                         width={1000}
                         height={1000}
-                        src="/images/about/omile.jpg"
+                        src="/images/about/about-main.png"
                         alt="about "
                     />
                 </div>

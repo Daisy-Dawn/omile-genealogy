@@ -10,8 +10,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import axios from 'axios'
 import UploadPhotoDrawer from '@/components/utils/DrawerComp'
-import { CircularProgress, Tooltip } from '@mui/material'
-import { PiHandArrowDownFill } from 'react-icons/pi'
+import { CircularProgress } from '@mui/material'
 
 export type Photo = {
     _id: string
@@ -186,22 +185,22 @@ const Photos = () => {
                         ))}
                     </div>
 
-                    <div className="flex w-full items-center gap-3">
+                    <div className="flex flex-col md:flex-row w-[90%] md:w-[78%] items-center gap-0 md:gap-3">
                         {/* upload a photo button */}
                         <button
                             onClick={toggleDrawer(true)}
-                            className={`md:rounded-[12px] rounded-[12px] button-home text-white mt-[1rem] md:text-[15px] text-[11px] sm:text-[13px] md:px-3 px-0 md:py-3 py-2 w-[100px] md:min-w-[150px] flex justify-center items-center`}
+                            className={`md:rounded-[12px] rounded-[12px] button-home text-white mt-[1rem] md:text-[15px] text-[11px] sm:text-[13px] md:px-3 px-0 md:py-3 py-2 w-[200px] md:min-w-[150px] flex justify-center items-center`}
                         >
                             Upload a photo
                         </button>
 
-                        <div className="rounded-[16px] mt-[1.5rem] border-[2px] border-appBrown2 md:px-[2rem] px-[1rem] md:py-3 py-2 w-full flex gap-2">
+                        <div className="rounded-[16px] mt-[1rem] border-[2px] border-appBrown2 md:px-[2rem] px-[1rem] md:py-[10px] py-[6px] w-full flex gap-2">
                             <LuSearch size={22} className="text-appBrown2" />
                             <input
                                 value={searchTerm}
                                 onChange={handleSearch}
                                 placeholder="Search"
-                                className="w-full bg-transparent text-appBrown2 outline-none placeholder:text-appBrown2"
+                                className="w-full bg-transparent placeholder:text-[12px] text-appBrown2 outline-none placeholder:text-appBrown2"
                             />
                         </div>
                     </div>
@@ -276,7 +275,15 @@ const Photos = () => {
                                 </div>
 
                                 {/* Swiper Slider */}
-                                <div className="lg:col-span-3 md:col-span-2 flex flex-col md:mt-[17%] xl:mt-[8%] lg:mt-[15%] h-full">
+                                <div className="lg:col-span-3 md:col-span-2 flex flex-col md:mt-[17%] xl:mt-1 lg:mt-[10%] h-full">
+                                    <button
+                                        onClick={() =>
+                                            setShowPhotos(!showPhotos)
+                                        }
+                                        className="underline text-appBrown2 mb-5 w-full text-end font-medium"
+                                    >
+                                        See all photos
+                                    </button>
                                     <div className="carousel-wrapper relative">
                                         <Swiper
                                             modules={[Navigation]}
@@ -300,7 +307,7 @@ const Photos = () => {
                                             {filteredPhotos.map((photo) => (
                                                 <SwiperSlide key={photo._id}>
                                                     <div
-                                                        className="rounded-[14px] h-[360px] z-50 shadow-xl bg-[#FDEBDD] overflow-hidden cursor-pointer"
+                                                        className="rounded-[14px] h-[300px] md:h-[360px] z-50 shadow-xl bg-[#FDEBDD] overflow-hidden cursor-pointer"
                                                         onClick={() =>
                                                             setSelectedPhoto(
                                                                 photo
@@ -322,10 +329,17 @@ const Photos = () => {
                                                         <div className="py-2 px-[1rem]">
                                                             <p className="text-appBrown2 text-[14px] capitalize font-medium">
                                                                 {photo.name
-                                                                    .length > 50
+                                                                    .length >
+                                                                (window.innerWidth <
+                                                                640
+                                                                    ? 30
+                                                                    : 50)
                                                                     ? `${photo.name.substring(
                                                                           0,
-                                                                          50
+                                                                          window.innerWidth <
+                                                                              640
+                                                                              ? 30
+                                                                              : 50
                                                                       )}...`
                                                                     : photo.name}
                                                             </p>
@@ -357,20 +371,6 @@ const Photos = () => {
                                                 Scroll to explore
                                             </p>
                                         </div>
-
-                                        <Tooltip title="View all Photos">
-                                            <button
-                                                onClick={() =>
-                                                    setShowPhotos(!showPhotos)
-                                                }
-                                                className=""
-                                            >
-                                                <PiHandArrowDownFill
-                                                    className="text-appBrown2"
-                                                    size={24}
-                                                />
-                                            </button>
-                                        </Tooltip>
                                     </div>
                                 </div>
                             </>
@@ -391,7 +391,7 @@ const Photos = () => {
                                     className="flex flex-col h-full"
                                 >
                                     <div
-                                        className="rounded-[14px] h-[370px] 2xl:h-[360px] shadow-xl bg-[#FDEBDD] overflow-hidden cursor-pointer"
+                                        className="rounded-[14px] h-[300px] md:h-[370px] 2xl:h-[360px] shadow-xl bg-[#FDEBDD] overflow-hidden cursor-pointer"
                                         onClick={() => setSelectedPhoto(photo)}
                                     >
                                         <div className="md:h-[300px] lg:h-[280px] xl:h-[300px] h-[200px] w-full">
@@ -408,12 +408,26 @@ const Photos = () => {
                                         </div>
                                         <div className="py-2 px-[1rem]">
                                             <p className="text-appBrown2 text-[14px] capitalize font-medium">
-                                                {photo.name.length > 57
-                                                    ? `${photo.name.substring(
-                                                          0,
-                                                          57
-                                                      )}...`
-                                                    : photo.name}
+                                                {photo.name.length > 57 ? (
+                                                    <>
+                                                        <span className="hidden sm:inline">
+                                                            {photo.name.substring(
+                                                                0,
+                                                                57
+                                                            )}
+                                                            ...
+                                                        </span>
+                                                        <span className="inline sm:hidden">
+                                                            {photo.name.substring(
+                                                                0,
+                                                                30
+                                                            )}
+                                                            ...
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    photo.name
+                                                )}
                                             </p>
                                         </div>
                                     </div>
