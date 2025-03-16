@@ -1,47 +1,42 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import "@/styles/genealogy.css";
-import { LuSearch } from "react-icons/lu"; // Import search icon
+import { LuSearch } from "react-icons/lu";
+import { CircularProgress } from "@mui/material";
 
-// Fallback Image
 const defaultImage = "/images/home/blankprofile.png";
 
-// Hardcoded children of Okonkwo (ensures completeness)
+// Hardcoded 7 Children of Okonkwo
 const childrenOfOkonkwo = [
-  { _id: "678ba753f0da3723bf62162b" },
-  { _id: "678ba7f7f0da3723bf62162e" },
-  { _id: "678c6a78692c5f6ca81f8041" },
-  { _id: "678c5db3692c5f6ca81f7fd3" },
-  { _id: "678bc6464ee74cfa3fc94b77" },
-  { _id: "678ba945f0da3723bf62163a" },
-  { _id: "678cf871e8614fb5b9e4235a" },
+  { _id: "678ba753f0da3723bf62162b", name: "Child 1" },
+  { _id: "678ba7f7f0da3723bf62162e", name: "Child 2" },
+  { _id: "678c6a78692c5f6ca81f8041", name: "Child 3" },
+  { _id: "678c5db3692c5f6ca81f7fd3", name: "Child 4" },
+  { _id: "678bc6464ee74cfa3fc94b77", name: "Child 5" },
+  { _id: "678ba945f0da3723bf62163a", name: "Child 6" },
+  { _id: "678cf871e8614fb5b9e4235a", name: "Child 7" },
 ];
 
-// Recursive function to build the family tree
-const buildFamilyTree = (member, allMembers) => {
+const TreeNode = ({ member, fetchChildren }) => {
   if (!member) return null;
 
-  return {
-    name: member.name || "Unknown Member",
-    image: member.picture || defaultImage,
-    children: (member.descendants?.children || []).map((child) => {
-      // Find child in API response using `_id`
-      const childData = allMembers.find((m) => m._id === child._id);
-      return buildFamilyTree(childData || child, allMembers); // Ensure full lineage mapping
-    }),
+  const [isOpen, setIsOpen] = useState(false);
+  const [children, setChildren] = useState(member.children || []);
+  const [loading, setLoading] = useState(false);
+
+  const handleExpand = async () => {
+    setIsOpen(!isOpen);
+    if (!isOpen && children.length === 0) {
+      setLoading(true);
+      const newChildren = await fetchChildren(member.name);
+      setChildren(newChildren);
+      setLoading(false);
+    }
   };
-};
-
-// Tree Node Component
-const TreeNode = ({ member, isRootChild = false }) => {
-  if (!member) return null; // Prevent errors
-
-  const [isOpen, setIsOpen] = useState(isRootChild ? true : false);
 
   return (
     <li>
-      <a className="member-btn" onClick={() => setIsOpen(!isOpen)}>
+      <a className="member-btn" onClick={handleExpand}>
         <div className="member-view-box">
           <div className="member-image">
             <img src={member.image} alt={member.name} />
@@ -51,74 +46,96 @@ const TreeNode = ({ member, isRootChild = false }) => {
           </div>
         </div>
       </a>
-      {member.children.length > 0 && isOpen && (
+      {isOpen && (
         <ul className="active">
-          {member.children.map((child, idx) => (
-            <TreeNode key={idx} member={child} />
-          ))}
+          {loading ? (
+            <p className="text-gray-500">
+              Loading{" "}
+              <CircularProgress size={15} color="success"></CircularProgress>
+            </p>
+          ) : (
+            children.map((child, idx) => (
+              <TreeNode
+                key={idx}
+                member={child}
+                fetchChildren={fetchChildren}
+              />
+            ))
+          )}
         </ul>
       )}
     </li>
   );
 };
 
-// Genealogy Tree Component
 const GenealogyTree = () => {
   const [familyTree, setFamilyTree] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFamilyTree = async () => {
+    const fetchInitialTree = async () => {
       try {
         const response = await fetch(
           "https://omile-genealogy-1.onrender.com/api/family"
         );
         const data = await response.json();
-
-        console.log("API Response:", data);
-
-        // Find Okonkwo Omile
         const okonkwo = data.data.find(
           (member) => member.name === "Okonkwo Ndichie Omile"
         );
-        if (!okonkwo) throw new Error("Okonkwo Omile not found in API data.");
+        if (!okonkwo) throw new Error("Okonkwo Omile not found.");
 
-        // Get Okonkwo's children using hardcoded data (ensuring correctness)
-        const okonkwoChildren = childrenOfOkonkwo.map(
-          (child) => data.data.find((m) => m._id === child._id) || child
-        );
+        const okonkwoChildren = childrenOfOkonkwo.map((child) => {
+          const apiChild = data.data.find((m) => m._id === child._id);
+          return {
+            name: apiChild ? apiChild.name : child.name,
+            image: apiChild ? apiChild.picture || defaultImage : defaultImage,
+            children: [],
+          };
+        });
 
-        // Build the full family tree recursively
-        const tree = {
+        setFamilyTree({
           name: okonkwo.name,
           image: okonkwo.picture || defaultImage,
-          children: okonkwoChildren.map((child) =>
-            buildFamilyTree(child, data.data)
-          ),
-        };
-
-        setFamilyTree(tree);
+          children: okonkwoChildren,
+        });
       } catch (error) {
-        console.error("Error fetching family tree:", error);
+        console.error("Error fetching initial tree:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFamilyTree();
+    fetchInitialTree();
   }, []);
+
+  const fetchChildren = async (name) => {
+    try {
+      const response = await fetch(
+        `https://omile-genealogy-1.onrender.com/api/family?name=${encodeURIComponent(
+          name
+        )}`
+      );
+      const data = await response.json();
+      return (
+        data.data[0]?.descendants?.children.map((child) => ({
+          name: child.name,
+          image: child.picture || defaultImage,
+          children: [],
+        })) || []
+      );
+    } catch (error) {
+      console.error(`Error fetching descendants for ${name}:`, error);
+      return [];
+    }
+  };
 
   return (
     <div className="body genealogy-body genealogy-scroll">
-      {/* HEADER SECTION */}
       <div className="flex justify-center mx-[1rem] lg:mx-0">
         <div className="xl:w-1/2 lg:w-2/3 w-full flex flex-col items-center gap-2">
-          {/* Header */}
           <h2 className="font-playfair leading-tight text-brown-gradient-main text-[32px] md:text-[50px] text-center font-medium">
             Family Tree
           </h2>
-
-          {/* Search Bar */}
           <div className="rounded-[16px] mt-[1.5rem] border-[2px] border-appBrown2 md:px-[2rem] px-[1rem] md:py-3 py-2 w-full flex gap-2">
             <LuSearch size={22} className="text-appBrown2 cursor-pointer" />
             <input
@@ -128,14 +145,18 @@ const GenealogyTree = () => {
           </div>
         </div>
       </div>
-
-      {/* GENEALOGY TREE */}
       <div className="genealogy-tree">
         {loading ? (
-          <p className="text-center text-gray-500">Loading Family Tree...</p>
+          <p className="text-center text-gray-500 padding-top">
+            <br />
+            🌳 Please wait while I fetch Family Tree Data{" "}
+            <CircularProgress size={22} color="success"></CircularProgress>
+          </p>
         ) : (
           <ul>
-            {familyTree && <TreeNode member={familyTree} isRootChild={true} />}
+            {familyTree && (
+              <TreeNode member={familyTree} fetchChildren={fetchChildren} />
+            )}
           </ul>
         )}
       </div>
