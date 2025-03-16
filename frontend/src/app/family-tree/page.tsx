@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import "@/styles/genealogy.css";
-import { LuSearch } from "react-icons/lu";
 import { CircularProgress } from "@mui/material";
 
 const defaultImage = "/images/home/blankprofile.png";
@@ -136,13 +135,6 @@ const GenealogyTree = () => {
           <h2 className="font-playfair leading-tight text-brown-gradient-main text-[32px] md:text-[50px] text-center font-medium">
             Family Tree
           </h2>
-          <div className="rounded-[16px] mt-[1.5rem] border-[2px] border-appBrown2 md:px-[2rem] px-[1rem] md:py-3 py-2 w-full flex gap-2">
-            <LuSearch size={22} className="text-appBrown2 cursor-pointer" />
-            <input
-              placeholder="Click on a member to view descendants"
-              className="w-full bg-transparent text-appBrown2 outline-none placeholder:text-appBrown"
-            />
-          </div>
         </div>
       </div>
       <div className="genealogy-tree">
