@@ -12,7 +12,7 @@ const childrenOfOkonkwo = [
   { _id: "678c6a78692c5f6ca81f8041", name: "Child 3" },
   { _id: "678c5db3692c5f6ca81f7fd3", name: "Child 4" },
   { _id: "678bc6464ee74cfa3fc94b77", name: "Child 5" },
-  { _id: "678ba945f0da3723bf62163a", name: "Child 6" },
+  { _id: "678cf5c9e8614fb5b9e4232f", name: "Child 6" },
   { _id: "678cf871e8614fb5b9e4235a", name: "Child 7" },
 ];
 
@@ -78,6 +78,7 @@ const GenealogyTree = () => {
           "https://omile-genealogy-1.onrender.com/api/family"
         );
         const data = await response.json();
+        console.log(data);
         const okonkwo = data.data.find(
           (member) => member.name === "Okonkwo Ndichie Omile"
         );
@@ -130,13 +131,7 @@ const GenealogyTree = () => {
 
   return (
     <div className="body genealogy-body genealogy-scroll">
-      <div className="flex justify-center mx-[1rem] lg:mx-0">
-        <div className="xl:w-1/2 lg:w-2/3 w-full flex flex-col items-center gap-2">
-          <h2 className="font-playfair leading-tight text-brown-gradient-main text-[32px] md:text-[50px] text-center font-medium">
-            Family Tree
-          </h2>
-        </div>
-      </div>
+      <div className="flex justify-center mx-[1rem] lg:mx-0"></div>
       <div className="genealogy-tree">
         {loading ? (
           <p className="text-center text-gray-500 padding-top">
