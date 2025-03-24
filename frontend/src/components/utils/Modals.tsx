@@ -405,7 +405,7 @@ export const DeleteFamilyModal: React.FC<DeleteFamilyModalProps> = ({
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Select Family"
+                                label="Updatee Parent Name"
                                 variant="outlined"
                             />
                         )}
@@ -708,7 +708,7 @@ export const UpdateFamilyDialog: React.FC<UpdateFamilyModalProps> = ({
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Select Family"
+                                label="Select Updatee"
                                 variant="outlined"
                             />
                         )}
