@@ -6,6 +6,11 @@ import {
     FamilyTreeChild,
 } from '@/components/family-tree-card/family-tree-cards'
 import { CircularProgress } from '@mui/material'
+import {
+    AddFamilyModal,
+    DeleteFamilyModal,
+    UpdateFamilyDialog,
+} from '@/components/utils/Modals'
 
 const Chronology = () => {
     const [marriedTo, setMarriedTo] = useState<
@@ -15,6 +20,44 @@ const Chronology = () => {
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('') // Track input value
     const [searchedName, setSearchedName] = useState('') // Actual name to search
+
+    const [open, setOpen] = useState(false) //add family
+    const [open2, setOpen2] = useState(false) //delete family
+    const [open3, setOpen3] = useState<boolean>(false) //update family
+
+    const handleOpen = () => setOpen(true) //add family
+
+    const handleOpen2 = () => {
+        //delete family
+        setOpen2(true)
+    }
+    const handleOpen3 = () => {
+        //delete family
+        setOpen3(true)
+    }
+
+    const handleClose = () => setOpen(false) //add family
+    const handleClose2 = () => {
+        //delete family
+        setOpen2(false)
+    }
+
+    const handleDelete = () => {
+        //delete family
+        console.log(`Deleting family......`)
+        handleClose()
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const parentIds = [
+        '678ba753f0da3723bf62162b', // Generation 1
+        '678ba7f7f0da3723bf62162e', // Generation 2
+        '678c6a78692c5f6ca81f8041', // Generation 3
+        '678c5db3692c5f6ca81f7fd3', // Generation 4
+        '678bc6464ee74cfa3fc94b77', // Generation 5
+        '678cf5c9e8614fb5b9e4232f', // Generation 6
+        '678cf871e8614fb5b9e4235a', // Generation 7
+    ]
 
     const parentNames = [
         'Muo Ndichie Omile (Nnaebue)', // Generation 1
@@ -93,6 +136,27 @@ const Chronology = () => {
                             className="w-full bg-transparent text-appBrown2 outline-none placeholder:text-appBrown"
                         />
                     </div>
+
+                    <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-1 md:gap-4">
+                        <button
+                            onClick={handleOpen}
+                            className={`md:rounded-[12px] rounded-[12px] button-home text-white mt-[1rem] md:text-[15px] text-[11px] sm:text-[13px] md:px-3 px-0 md:py-3 py-2 min-w-[150px] flex justify-center items-center`}
+                        >
+                            Add a family
+                        </button>
+                        <button
+                            onClick={handleOpen3}
+                            className={`md:rounded-[12px] rounded-[12px] button-home text-white mt-[1rem] md:text-[15px] text-[11px] sm:text-[13px] md:px-3 px-0 md:py-3 py-2 min-w-[150px] flex justify-center items-center`}
+                        >
+                            Update a family
+                        </button>
+                        <button
+                            onClick={handleOpen2}
+                            className={`md:rounded-[12px] rounded-[12px] button-home text-white mt-[1rem] md:text-[15px] text-[11px] sm:text-[13px] md:px-3 px-0 md:py-3 py-2 min-w-[150px] flex justify-center items-center`}
+                        >
+                            Delete a family
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -130,6 +194,15 @@ const Chronology = () => {
                     <FamilyTreeParent key={index} name={name} />
                 ))}
             </div>
+
+            {/* MODALS */}
+            <AddFamilyModal open={open} handleClose={handleClose} />
+            <DeleteFamilyModal
+                open={open2}
+                onClose={handleClose2}
+                onDelete={handleDelete}
+            />
+            <UpdateFamilyDialog open={open3} onClose={() => setOpen3(false)} />
         </section>
     )
 }

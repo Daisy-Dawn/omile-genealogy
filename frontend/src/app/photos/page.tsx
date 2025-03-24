@@ -10,13 +10,55 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import axios from 'axios'
 import UploadPhotoDrawer from '@/components/utils/DrawerComp'
-import { CircularProgress } from '@mui/material'
+import {
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Button,
+} from '@mui/material'
 
 export type Photo = {
     _id: string
     photourl: string
     name: string
     type: string
+}
+
+interface DeleteConfirmationDialogProps {
+    open: boolean
+    onClose: () => void
+    onConfirm: () => void
+    photoName: string
+}
+
+export const DeleteConfirmationDialog = ({
+    open,
+    onClose,
+    onConfirm,
+    photoName,
+}: DeleteConfirmationDialogProps) => {
+    return (
+        <Dialog open={open} onClose={onClose}>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Are you sure you want to delete <strong>{photoName}</strong>
+                    ?
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={onConfirm} color="error">
+                    Delete
+                </Button>
+            </DialogActions>
+        </Dialog>
+    )
 }
 
 const Photos = () => {
@@ -37,6 +79,9 @@ const Photos = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
+
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+    const [photoToDelete, setPhotoToDelete] = useState<Photo | null>(null)
 
     const toggleDrawer =
         (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -117,33 +162,67 @@ const Photos = () => {
         setValue((event.target as HTMLInputElement).value)
     }
 
-    const handleDeletePhoto = async (photo: Photo) => {
-        if (!photo?._id) return
+    // const handleDeletePhoto = async (photo: Photo) => {
+    //     if (!photo?._id) return
 
-        const confirmDelete = window.confirm(
-            `Are you sure you want to delete ${photo.name}?`
-        )
-        if (!confirmDelete) return
+    //     const confirmDelete = window.confirm(
+    //         `Are you sure you want to delete ${photo.name}?`
+    //     )
+    //     if (!confirmDelete) return
+
+    //     try {
+    //         await axios.delete(
+    //             `${process.env.NEXT_PUBLIC_API_URL}/photos/${photo._id}`
+    //         )
+
+    //         // Remove the deleted photo from state
+    //         const updatedPhotos = photos.filter((p) => p._id !== photo._id)
+    //         setPhotos(updatedPhotos)
+    //         setFilteredPhotos(updatedPhotos)
+
+    //         // Reset selected photo if it was the deleted one
+    //         if (selectedPhoto?._id === photo._id) {
+    //             setSelectedPhoto(updatedPhotos[0] || null)
+    //         }
+    //     } catch (error) {
+    //         setError('Failed to delete photo. Please try again.')
+    //         console.error('Error deleting photo:', error)
+    //     } finally {
+    //         setIsLoading(false)
+    //     }
+    // }
+
+    const handleDeletePhoto = (photo: Photo) => {
+        if (!photo?._id) return
+        setPhotoToDelete(photo)
+        setIsDeleteDialogOpen(true) // Open the dialog
+    }
+
+    const handleConfirmDelete = async () => {
+        if (!photoToDelete?._id) return
 
         try {
             await axios.delete(
-                `${process.env.NEXT_PUBLIC_API_URL}/photos/${photo._id}`
+                `${process.env.NEXT_PUBLIC_API_URL}/photos/${photoToDelete._id}`
             )
 
             // Remove the deleted photo from state
-            const updatedPhotos = photos.filter((p) => p._id !== photo._id)
+            const updatedPhotos = photos.filter(
+                (p) => p._id !== photoToDelete._id
+            )
             setPhotos(updatedPhotos)
             setFilteredPhotos(updatedPhotos)
 
             // Reset selected photo if it was the deleted one
-            if (selectedPhoto?._id === photo._id) {
+            if (selectedPhoto?._id === photoToDelete._id) {
                 setSelectedPhoto(updatedPhotos[0] || null)
             }
         } catch (error) {
             setError('Failed to delete photo. Please try again.')
             console.error('Error deleting photo:', error)
         } finally {
-            setIsLoading(false)
+            setIsDeleteDialogOpen(false) // Close dialog
+            setPhotoToDelete(null) // Reset state
         }
     }
 
@@ -453,6 +532,13 @@ const Photos = () => {
                     />
                 </div>
             )}
+
+            <DeleteConfirmationDialog
+                open={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                onConfirm={handleConfirmDelete}
+                photoName={photoToDelete?.name || ''}
+            />
         </section>
     )
 }

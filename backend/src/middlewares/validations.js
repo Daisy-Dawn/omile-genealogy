@@ -5,7 +5,7 @@ const validateFamilyMember = [
     check('descendants.marriedTo')
         .optional()
         .isArray()
-        .withMessage('Married-to must be a string'),
+        .withMessage('Married-to must be an array'),
     check('descendants.children')
         .optional()
         .isArray()

@@ -59,7 +59,7 @@ router.post('/', validateFamilyMember, async (req, res) => {
         await newPerson.save()
 
         res.status(201).json({
-            message: 'Family member added successfully',
+            message: 'Family added successfully',
             data: newPerson,
         })
     } catch (err) {
@@ -259,11 +259,11 @@ router.put('/:id', validateFamilyMember, async (req, res) => {
         )
 
         if (!updatedPerson) {
-            return res.status(404).json({ message: 'Family member not found' })
+            return res.status(404).json({ message: 'Family not found' })
         }
 
         res.status(200).json({
-            message: 'Family member updated successfully',
+            message: 'Family updated successfully',
             data: updatedPerson,
         })
     } catch (err) {
@@ -276,8 +276,8 @@ router.delete('/:id', async (req, res) => {
     try {
         const deletedPerson = await Person.findByIdAndDelete(req.params.id)
         if (!deletedPerson)
-            return res.status(404).json({ message: 'Family member not found' })
-        res.status(200).json({ message: 'Family member deleted' })
+            return res.status(404).json({ message: 'Family not found' })
+        res.status(200).json({ message: 'Family deleted' })
     } catch (err) {
         res.status(500).json({ error: err.message })
     }

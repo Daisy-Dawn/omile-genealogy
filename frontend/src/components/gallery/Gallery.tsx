@@ -20,6 +20,7 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
     const [photos, setPhotos] = useState<Photo[]>([])
     const [loading, setLoading] = useState(true)
+    const [slidesPerView, setSlidesPerView] = useState(3)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const swiperRef = useRef<any>(null)
@@ -76,12 +77,24 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
         setSelectedImage(null)
     }
 
+    // Adjust slidesPerView based on screen width
+    useEffect(() => {
+        const handleResize = () => {
+            setSlidesPerView(window.innerWidth < 768 ? 1 : 3)
+        }
+
+        handleResize() // Set initial value
+        window.addEventListener('resize', handleResize)
+
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
     if (loading) return null // Ensure nothing renders while loading
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-[#24202014]">
             <div
-                className="bg-[#F9E6D9] h-[400px] w-[700px] p-4 rounded-lg shadow-lg relative"
+                className="bg-[#F9E6D9] h-[400px] w-full md:w-[700px] p-4 rounded-lg shadow-lg relative"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
@@ -93,16 +106,22 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
 
                 <button
                     onClick={() => swiperRef.current?.swiper?.slidePrev()}
-                    className="absolute top-7 left-1/2 z-50 transform -translate-y-1/2 bg-transparent border-appBrown2 border-[2px] text-appBrown2 p-2 rounded-full shadow-md"
+                    className="absolute top-7 left-1/2 z-50 transform -translate-y-1/2 bg-transparent border-appBrown2 border-[2px] text-appBrown2 p-1 md:p-2 rounded-full shadow-md"
                 >
-                    <FaArrowUpLong size={20} />
+                    <FaArrowUpLong
+                        // size={14}
+                        className="size-[14px] md:size-[17px]"
+                    />
                 </button>
 
                 <button
                     onClick={() => swiperRef.current?.swiper?.slideNext()}
-                    className="absolute bottom-[-20px] left-1/2 z-50 transform -translate-y-1/2 bg-transparent border-appBrown2 border-[2px] text-appBrown2 p-2 rounded-full shadow-md"
+                    className="absolute bottom-[0px] md:bottom-[-20px] left-1/2 z-50 transform -translate-y-1/2 bg-transparent border-appBrown2 border-[2px] text-appBrown2 p-1 md:p-2 rounded-full shadow-md"
                 >
-                    <FaArrowDownLong size={20} />
+                    <FaArrowDownLong
+                        className="size-[14px] md:size-[17px]"
+                        // size={14}
+                    />
                 </button>
 
                 {filteredPhotos.length > 0 ? (
@@ -114,18 +133,30 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
                             direction="vertical"
                             spaceBetween={10}
                             slidesPerView={1}
-                            className="mt-[3.5rem] h-[300px] w-full"
+                            className="md:mt-[3.5rem] mt-[2.3rem] h-[300px] w-full"
                         >
                             {Array.from({
-                                length: Math.ceil(filteredPhotos.length / 3),
+                                length: Math.ceil(
+                                    filteredPhotos.length / slidesPerView
+                                ),
                             }).map((_, index) => (
                                 <SwiperSlide
                                     key={index}
                                     className="h-[280px] w-full"
                                 >
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div
+                                        className={`grid grid-cols-1 ${
+                                            slidesPerView === 3
+                                                ? 'md:grid-cols-3'
+                                                : ''
+                                        } gap-4`}
+                                    >
                                         {filteredPhotos
-                                            .slice(index * 3, index * 3 + 3) // Show 3 images per slide
+                                            .slice(
+                                                index * slidesPerView,
+                                                index * slidesPerView +
+                                                    slidesPerView
+                                            ) // Show 3 or 1 images per slide
                                             .map((photo) => (
                                                 <div
                                                     key={photo._id}
@@ -167,7 +198,7 @@ const Gallery = ({ onClose, personName }: GalleryProps) => {
                     }}
                 >
                     <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg">
-                        <div className="h-[500px] w-full overflow-hidden">
+                        <div className="md:h-[500px] h-[400px] w-[310px] md:w-[500px] overflow-hidden">
                             <Image
                                 src={selectedImage}
                                 alt="Selected"
