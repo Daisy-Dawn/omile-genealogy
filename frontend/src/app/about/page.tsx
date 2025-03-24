@@ -15,7 +15,7 @@ const About = () => {
                     <div className="mt-[1rem] font-medium">
                         <div>
                             <p className="md:text-[14px] md:text-center md:mx-[2rem] text-appBrown2 text-[12px] ">
-                                Nimo, situated in Nikoka Local Government Area
+                                Nimo, situated in Njikoka Local Government Area
                                 of Anambra State, comprises four quarters:
                                 Ifitenu, Ifiteani, Etiti Nimo, and Egbengwu
                                 Ojideleke. Our heritage begins in
