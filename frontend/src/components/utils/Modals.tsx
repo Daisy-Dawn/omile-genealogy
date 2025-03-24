@@ -155,7 +155,7 @@ export const AddFamilyModal: React.FC<AddFamilyModalProps> = ({
                             <input
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder="Family Name"
+                                placeholder="Updatee's Parent Name"
                                 className="w-full input-field py-2 px-2 rounded-[16px] border border-black bg-transparent text-black outline-none placeholder:text-gray-500 "
                                 // className=""
                             />
@@ -167,7 +167,7 @@ export const AddFamilyModal: React.FC<AddFamilyModalProps> = ({
                             <input
                                 value={parent}
                                 onChange={(e) => setParent(e.target.value)}
-                                placeholder="Name of parent"
+                                placeholder="Updatee's Grandparent Name (optional)"
                                 className="w-full input-field py-2 px-2 rounded-[16px] border border-black bg-transparent text-black outline-none placeholder:text-gray-500 "
                             />
                         </div>
@@ -718,7 +718,7 @@ export const UpdateFamilyDialog: React.FC<UpdateFamilyModalProps> = ({
                             <Box className="flex flex-col mt-3 gap-4">
                                 <TextField
                                     fullWidth
-                                    label="Family Name"
+                                    label="Updatee's Parent Name"
                                     value={updatedData.name}
                                     onChange={(e) =>
                                         handleChange('name', e.target.value)
