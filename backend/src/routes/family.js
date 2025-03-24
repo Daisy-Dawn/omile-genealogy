@@ -200,67 +200,58 @@ router.get('/:id/descendant-summary', async (req, res) => {
 })
 
 // Update a family member
-router.put('/:id', validateFamilyMember, async (req, res) => {
+router.patch('/:id', validateFamilyMember, async (req, res) => {
     try {
         const updateData = req.body
+        const existingPerson = await Person.findById(req.params.id)
 
-        // Handle descendants transformation if provided
-        if (updateData.descendants) {
-            if (updateData.descendants.marriedTo) {
-                updateData.descendants.marriedTo =
-                    updateData.descendants.marriedTo.map((spouse) => ({
-                        _id: spouse._id || new mongoose.Types.ObjectId(),
-                        name: spouse.name,
-                        picture: spouse.picture || '',
-                    }))
-            }
-
-            if (updateData.descendants.children) {
-                updateData.descendants.children =
-                    updateData.descendants.children.map((child) => ({
-                        name: child,
-                        bio: child.bio || '',
-                        picture: child.picture || '',
-                        _id: child._id || new mongoose.Types.ObjectId(), // Retain or generate unique _id
-                    }))
-            }
-
-            if (updateData.descendants.grandchildren) {
-                updateData.descendants.grandchildren =
-                    updateData.descendants.grandchildren.map((grandchild) => ({
-                        name: grandchild.name,
-                        bio: grandchild.bio || '', // Default bio for grandchildren
-                        picture: grandchild.picture || '', // Default picture for grandchildren
-                        marriedTo: grandchild.marriedTo || [], // Default to an empty array
-                        _id: grandchild._id || new mongoose.Types.ObjectId(), // Retain or generate unique _id
-                    }))
-            }
-
-            if (updateData.descendants.greatgrandchildren) {
-                updateData.descendants.greatgrandchildren =
-                    updateData.descendants.greatgrandchildren.map(
-                        (greatgrandchild) => ({
-                            name: greatgrandchild.name,
-                            bio: greatgrandchild.bio || '', // Default bio for greatgrandchildren
-                            picture: greatgrandchild.picture || '', // Default picture for greatgrandchildren
-                            _id:
-                                greatgrandchild._id ||
-                                new mongoose.Types.ObjectId(), // Retain or generate unique _id
-                        })
-                    )
-            }
+        if (!existingPerson) {
+            return res.status(404).json({ message: 'Family not found' })
         }
 
-        // Perform the update
+        // Preserve existing values if not provided in the request
+        updateData.picture = updateData.picture ?? existingPerson.picture
+        updateData.bio = updateData.bio ?? existingPerson.bio
+
+        if (updateData.descendants) {
+            // Merge descendants properly
+            updateData.descendants.marriedTo =
+                updateData.descendants.marriedTo?.map((spouse) => ({
+                    _id: spouse._id || new mongoose.Types.ObjectId(),
+                    name: spouse.name,
+                    picture:
+                        spouse.picture ??
+                        existingPerson.descendants.marriedTo.find(
+                            (s) => s._id.toString() === spouse._id
+                        )?.picture ??
+                        '',
+                })) ?? existingPerson.descendants.marriedTo
+
+            updateData.descendants.children =
+                updateData.descendants.children?.map((child) => ({
+                    _id: child._id || new mongoose.Types.ObjectId(),
+                    name: child.name,
+                    bio:
+                        child.bio ??
+                        existingPerson.descendants.children.find(
+                            (c) => c._id.toString() === child._id
+                        )?.bio ??
+                        '',
+                    picture:
+                        child.picture ??
+                        existingPerson.descendants.children.find(
+                            (c) => c._id.toString() === child._id
+                        )?.picture ??
+                        '',
+                })) ?? existingPerson.descendants.children
+        }
+
+        // Update only the fields that exist in the request body
         const updatedPerson = await Person.findByIdAndUpdate(
             req.params.id,
             { $set: updateData },
             { new: true, runValidators: true }
         )
-
-        if (!updatedPerson) {
-            return res.status(404).json({ message: 'Family not found' })
-        }
 
         res.status(200).json({
             message: 'Family updated successfully',
@@ -270,6 +261,80 @@ router.put('/:id', validateFamilyMember, async (req, res) => {
         res.status(500).json({ error: err.message })
     }
 })
+
+// router.put('/:id', validateFamilyMember, async (req, res) => {
+//     try {
+//         const updateData = req.body
+
+//         // Handle descendants transformation if provided
+//         if (updateData.descendants) {
+//             updateData.descendants = {
+//                 ...existingPerson.descendants, // Preserve existing data
+//                 ...updateData.descendants, // Override only provided fields
+//             }
+
+//             if (updateData.descendants.marriedTo) {
+//                 updateData.descendants.marriedTo =
+//                     updateData.descendants.marriedTo.map((spouse) => ({
+//                         _id: spouse._id || new mongoose.Types.ObjectId(),
+//                         name: spouse.name,
+//                         picture:
+//                             spouse.picture !== undefined &&
+//                             spouse.picture !== null
+//                                 ? spouse.picture
+//                                 : existingPerson.descendants?.marriedTo?.find(
+//                                       (s) => s._id.toString() === spouse._id
+//                                   )?.picture || '',
+//                     }))
+//             }
+
+//             if (updateData.descendants.children) {
+//                 updateData.descendants.children =
+//                     updateData.descendants.children.map((child) => ({
+//                         _id: child._id || new mongoose.Types.ObjectId(),
+//                         name: child.name,
+//                         bio:
+//                             child.bio !== undefined && child.bio !== null
+//                                 ? child.bio
+//                                 : existingPerson.descendants?.children?.find(
+//                                       (c) => c._id.toString() === child._id
+//                                   )?.bio || '',
+//                         picture:
+//                             child.picture !== undefined &&
+//                             child.picture !== null
+//                                 ? child.picture
+//                                 : existingPerson.descendants?.children?.find(
+//                                       (c) => c._id.toString() === child._id
+//                                   )?.picture || '',
+//                     }))
+//             }
+//         }
+
+//         // Perform the update
+//         const existingPerson = await Person.findById(req.params.id)
+//         if (!existingPerson) {
+//             return res.status(404).json({ message: 'Family not found' })
+//         }
+
+//         // Merge existing data with new data (update only provided fields)
+//         const updatedPerson = await Person.findByIdAndUpdate(
+//             req.params.id,
+//             { $set: updateData }, // Only update provided fields
+//             { new: true, runValidators: true }
+//         )
+
+//         if (!updatedPerson) {
+//             return res.status(404).json({ message: 'Family not found' })
+//         }
+
+//         res.status(200).json({
+//             message: 'Family updated successfully',
+//             data: updatedPerson,
+//         })
+//     } catch (err) {
+//         res.status(500).json({ error: err.message })
+//     }
+// })
 
 // Delete a family member
 router.delete('/:id', async (req, res) => {

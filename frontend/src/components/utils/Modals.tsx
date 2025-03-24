@@ -642,13 +642,15 @@ export const UpdateFamilyDialog: React.FC<UpdateFamilyModalProps> = ({
                     marriedTo: updatedData.marriedTo
                         .filter((name) => name.trim() !== '') // Remove empty names
                         .map((name) => ({ name })), // Convert to object format
-                    children: updatedData.children.filter(
-                        (name) => name.trim() !== ''
-                    ), // Remove empty children names
+                    children: updatedData.children
+                        .filter((name) => name.trim() !== '')
+                        .map((name) => ({ name })), // Convert to object format
+                    // grandchildren: [], // Ensure this field is included
+                    // greatgrandchildren: [], // Ensure this field is included
                 },
             }
 
-            const response = await axios.put(
+            const response = await axios.patch(
                 `${process.env.NEXT_PUBLIC_API_URL}/family/${selectedFamily._id}`,
                 formattedData
             )
