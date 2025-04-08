@@ -567,7 +567,12 @@ export const UpdateFamilyDialog: React.FC<UpdateFamilyModalProps> = ({
                 const response = await axios.get(
                     `${process.env.NEXT_PUBLIC_API_URL}/family`
                 )
-                setFamilies(response.data.data)
+                // setFamilies(response.data.data)
+                const result = Array.isArray(response.data.data)
+                    ? response.data.data
+                    : [response.data.data]
+
+                setFamilies(result)
             } catch (error) {
                 console.error('Error fetching families:', error)
             }
@@ -714,7 +719,7 @@ export const UpdateFamilyDialog: React.FC<UpdateFamilyModalProps> = ({
                 >
                     <Autocomplete
                         options={families}
-                        getOptionLabel={(option) => option.name}
+                        getOptionLabel={(option) => option?.name || ''}
                         onChange={handleFamilySelect}
                         renderInput={(params) => (
                             <TextField
@@ -729,7 +734,7 @@ export const UpdateFamilyDialog: React.FC<UpdateFamilyModalProps> = ({
                             <Box className="flex flex-col mt-3 gap-4">
                                 <TextField
                                     fullWidth
-                                    label="Updatee's Parent Name"
+                                    label="New Updatee's Name"
                                     value={updatedData.name}
                                     onChange={(e) =>
                                         handleChange('name', e.target.value)
