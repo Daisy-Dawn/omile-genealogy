@@ -202,63 +202,44 @@ router.get('/:id/descendant-summary', async (req, res) => {
 // Update a family member
 router.patch('/:id', validateFamilyMember, async (req, res) => {
     try {
-        const updateData = req.body
+        const { name, bio, descendants } = req.body
+
         const existingPerson = await Person.findById(req.params.id)
-
         if (!existingPerson) {
-            return res.status(404).json({ message: 'Family not found' })
+            return res.status(404).json({ message: 'Person not found' })
         }
 
-        // Preserve existing values if not provided in the request
-        updateData.picture = updateData.picture ?? existingPerson.picture
-        updateData.bio = updateData.bio ?? existingPerson.bio
+        existingPerson.name = name
+        existingPerson.bio = bio
 
-        if (updateData.descendants) {
-            // Merge descendants properly
-            updateData.descendants.marriedTo =
-                updateData.descendants.marriedTo?.map((spouse) => ({
-                    _id: spouse._id || new mongoose.Types.ObjectId(),
-                    name: spouse.name,
-                    picture:
-                        spouse.picture ??
-                        existingPerson.descendants.marriedTo.find(
-                            (s) => s._id.toString() === spouse._id
-                        )?.picture ??
-                        '',
-                })) ?? existingPerson.descendants.marriedTo
-
-            updateData.descendants.children =
-                updateData.descendants.children?.map((child) => ({
-                    _id: child._id || new mongoose.Types.ObjectId(),
-                    name: child.name,
-                    bio:
-                        child.bio ??
-                        existingPerson.descendants.children.find(
-                            (c) => c._id.toString() === child._id
-                        )?.bio ??
-                        '',
-                    picture:
-                        child.picture ??
-                        existingPerson.descendants.children.find(
-                            (c) => c._id.toString() === child._id
-                        )?.picture ??
-                        '',
-                })) ?? existingPerson.descendants.children
-        }
-
-        // Update only the fields that exist in the request body
-        const updatedPerson = await Person.findByIdAndUpdate(
-            req.params.id,
-            { $set: updateData },
-            { new: true, runValidators: true }
+        // Update marriedTo list
+        existingPerson.descendants.marriedTo = descendants.marriedTo.map(
+            (spouse, index) => ({
+                ...existingPerson.descendants.marriedTo[index],
+                name: spouse.name,
+                picture: spouse.picture || '',
+            })
         )
 
-        res.status(200).json({
-            message: 'Family updated successfully',
-            data: updatedPerson,
+        // Update children list
+        existingPerson.descendants.children = descendants.children.map(
+            (child, index) => ({
+                ...existingPerson.descendants.children[index],
+                name: child.name,
+                bio: child.bio || '',
+                picture: child.picture || '',
+            })
+        )
+
+        await existingPerson.save()
+
+        res.json({
+            message: 'Family updated successfully!',
+            data: existingPerson,
         })
-    } catch (err) {
-        res.status(500).json({ error: err.message })
+    } catch (error) {
+        console.error('Error updating family:', error)
+        res.status(500).json({ message: 'Server error' })
     }
 })
 

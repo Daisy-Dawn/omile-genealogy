@@ -505,8 +505,8 @@ interface Family2 {
     name: string
     bio?: string
     descendants: {
-        marriedTo: { name: string }[]
-        children: { name: string }[]
+        marriedTo: { name: string; picture: string }[]
+        children: { name: string; picture: string; bio: string }[]
     }
 }
 
@@ -640,13 +640,24 @@ export const UpdateFamilyDialog: React.FC<UpdateFamilyModalProps> = ({
                 bio: updatedData.bio,
                 descendants: {
                     marriedTo: updatedData.marriedTo
-                        .filter((name) => name.trim() !== '') // Remove empty names
-                        .map((name) => ({ name })), // Convert to object format
+                        .filter((name) => name.trim() !== '')
+                        .map((name, index) => ({
+                            name,
+                            picture:
+                                selectedFamily.descendants.marriedTo[index]
+                                    ?.picture || '',
+                        })),
                     children: updatedData.children
                         .filter((name) => name.trim() !== '')
-                        .map((name) => ({ name })), // Convert to object format
-                    // grandchildren: [], // Ensure this field is included
-                    // greatgrandchildren: [], // Ensure this field is included
+                        .map((name, index) => ({
+                            name,
+                            bio:
+                                selectedFamily.descendants.children[index]
+                                    ?.bio || '',
+                            picture:
+                                selectedFamily.descendants.children[index]
+                                    ?.picture || '',
+                        })),
                 },
             }
 
