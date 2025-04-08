@@ -17,6 +17,10 @@ export const metadata: Metadata = {
     title: ' Genealogy of Omile Family',
     description:
         'The family history of one of the largest families in Nimo, Anambra State. ',
+    icons: {
+        icon: '/logo.jpg',
+        shortcut: '/logo.jpg',
+    },
 }
 
 export default function RootLayout({
